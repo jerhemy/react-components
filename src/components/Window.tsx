@@ -12,7 +12,7 @@ const Window = ({ children }) => {
                                 </button>
                             </li>
                             <li className="d-none d-lg-block">
-                                <h5 className="mb-0">Good Morning, John Smith</h5>
+                                <h5 className="mb-0">Good Morning, John Doe</h5>
                             </li>
                         </ul>
 
