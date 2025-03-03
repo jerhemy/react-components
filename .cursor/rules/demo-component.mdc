@@ -1,0 +1,5 @@
+---
+description: create demo components
+globs: *.tsx
+alwaysApply: false
+---

@@ -1,0 +1,152 @@
+.custom-select {
+  position: relative;
+  width: 100%;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+  font-size: 14px;
+  color: #333;
+}
+
+.select-control {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  min-height: 38px;
+  padding: 2px 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  background-color: white;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-sizing: border-box;
+}
+
+.select-control:hover {
+  border-color: #b3b3b3;
+}
+
+.select-value {
+  display: flex;
+  flex: 1;
+  flex-wrap: wrap;
+  align-items: center;
+  padding: 2px;
+  overflow: hidden;
+}
+
+.placeholder {
+  color: #757575;
+}
+
+.single-value {
+  margin-left: 2px;
+}
+
+.multi-value-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+
+.multi-value {
+  display: flex;
+  align-items: center;
+  background-color: #e6f7ff;
+  border-radius: 2px;
+  padding: 2px 6px;
+  margin: 2px 0;
+  font-size: 85%;
+}
+
+.multi-value-label {
+  padding-right: 4px;
+}
+
+.multi-value-remove {
+  cursor: pointer;
+  color: #666;
+  font-weight: bold;
+  margin-left: 4px;
+}
+
+.multi-value-remove:hover {
+  color: #333;
+}
+
+.select-indicators {
+  display: flex;
+  align-items: center;
+}
+
+.clear-indicator {
+  padding: 0 8px;
+  color: #999;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+.clear-indicator:hover {
+  color: #666;
+}
+
+.dropdown-indicator {
+  color: #999;
+  padding: 0 8px;
+  font-size: 10px;
+}
+
+.select-menu {
+  position: absolute;
+  width: 100%;
+  margin-top: 4px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  background-color: white;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  z-index: 100;
+  max-height: 300px;
+  overflow-y: auto;
+}
+
+.select-search {
+  padding: 8px;
+  border-bottom: 1px solid #eee;
+}
+
+.select-search input {
+  width: 100%;
+  padding: 8px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 14px;
+  outline: none;
+}
+
+.select-search input:focus {
+  border-color: #2684ff;
+  box-shadow: 0 0 0 1px #2684ff;
+}
+
+.select-options {
+  max-height: 250px;
+  overflow-y: auto;
+}
+
+.select-option {
+  padding: 8px 12px;
+  cursor: pointer;
+}
+
+.select-option:hover {
+  background-color: #f8f8f8;
+}
+
+.select-option.selected {
+  background-color: #ebf5ff;
+  font-weight: 500;
+}
+
+.no-options {
+  padding: 8px 12px;
+  color: #999;
+  font-style: italic;
+} 
