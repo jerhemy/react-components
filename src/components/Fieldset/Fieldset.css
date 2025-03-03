@@ -1,0 +1,132 @@
+.fieldset {
+  border: 1px solid #dee2e6;
+  background: #ffffff;
+  color: #495057;
+  border-radius: 6px;
+  margin-bottom: 1rem;
+  padding: 0;
+}
+
+.fieldset-legend {
+  border: 0 none;
+  padding: 0;
+  margin-bottom: 0;
+  color: #495057;
+  background: transparent;
+  width: auto;
+  position: relative;
+  margin-left: 1rem;
+}
+
+.fieldset-legend-text {
+  display: inline-block;
+  line-height: 1;
+}
+
+/* Non-toggleable fieldset legend */
+.fieldset:not(.fieldset-toggleable) .fieldset-legend-text {
+  background: #ffffff;
+  padding: 0.5rem 1rem;
+  border: 1px solid #dee2e6;
+  border-radius: 4px;
+  font-weight: 600;
+  font-size: 1rem;
+  position: relative;
+  top: -0.75rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+.fieldset-toggleable .fieldset-legend {
+  padding: 0;
+  margin-left: 1.25rem;
+}
+
+.fieldset-toggleable .fieldset-toggle {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  background: #ffffff;
+  border: 1px solid #dee2e6;
+  border-radius: 4px;
+  color: #495057;
+  padding: 0.5rem 1rem;
+  font-weight: 600;
+  font-size: 1rem;
+  transition: background-color 0.2s, color 0.2s, box-shadow 0.2s;
+  position: relative;
+  top: -0.75rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+/* Remove border and styling from the legend text inside toggle button */
+.fieldset-toggleable .fieldset-legend-text {
+  border: 0 none;
+  padding: 0;
+  background: transparent;
+  box-shadow: none;
+  position: static;
+  top: 0;
+}
+
+.fieldset-toggleable .fieldset-toggle:focus {
+  outline: 0 none;
+  box-shadow: 0 0 0 0.2rem #bfdbfe;
+  border-color: #3b82f6;
+}
+
+.fieldset-toggleable .fieldset-toggle:hover {
+  color: #3b82f6;
+  border-color: #3b82f6;
+}
+
+.fieldset-toggle-icon {
+  display: inline-block;
+  position: relative;
+  width: 14px;
+  height: 14px;
+  margin-right: 0.5rem;
+}
+
+.fieldset-toggle-icon::before,
+.fieldset-toggle-icon::after {
+  content: '';
+  position: absolute;
+  background-color: currentColor;
+  transition: transform 0.3s;
+}
+
+/* Horizontal line */
+.fieldset-toggle-icon::before {
+  top: 6px;
+  left: 0;
+  width: 14px;
+  height: 2px;
+}
+
+/* Vertical line - only shown when collapsed */
+.fieldset-toggle-icon::after {
+  top: 0;
+  left: 6px;
+  width: 2px;
+  height: 14px;
+  transform: scaleY(1);
+}
+
+.fieldset-toggle-icon.pi-minus::after {
+  transform: scaleY(0);
+}
+
+.fieldset-content {
+  padding: 1.25rem;
+  border-top: 1px solid #dee2e6;
+}
+
+.fieldset-collapsed .fieldset-content {
+  display: none;
+}
+
+/* Animation */
+.fieldset-content-wrapper {
+  overflow: hidden;
+  transition: height 0.3s ease;
+} 

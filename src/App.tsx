@@ -1,23 +1,21 @@
-import './App.css'
-
-import DataGridDemo from './components/DataGridDemo'
-import GlobalSearchDemo from './components/GlobalSearchDemo'
-import JsonTreeViewerDemo from './components/JsonTreeViewerDemo'
-import RouteTrackerDemo from './components/RouteTrackerDemo'
-import SchedulerDemo from './components/SchedulerDemo'
-import SelectDemo from './components/SelectDemo'
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+import './App.css';
+import Layout from './components/Layout/Layout';
+import ComponentPage from './components/ComponentPage/ComponentPage';
+import HomePage from './components/HomePage/HomePage';
 
 function App() {
   return (
-    <div className="app-container">
-      <SchedulerDemo />
-      <JsonTreeViewerDemo />
-      <GlobalSearchDemo />
-      <RouteTrackerDemo />
-      <DataGridDemo />
-      <SelectDemo />
-    </div>
-  )
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<Layout />}>
+          <Route index element={<HomePage />} />
+          <Route path="components/:componentId" element={<ComponentPage />} />
+          <Route path="*" element={<Navigate to="/" replace />} />
+        </Route>
+      </Routes>
+    </BrowserRouter>
+  );
 }
 
-export default App
+export default App;

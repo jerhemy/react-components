@@ -49,67 +49,9 @@
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 
-/* Event Modal */
-.event-modal-backdrop {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background-color: rgba(0, 0, 0, 0.5);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  z-index: 1000;
-}
-
-.event-modal {
-  background-color: #fff;
-  border-radius: 8px;
-  width: 90%;
-  max-width: 500px;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
-  overflow: hidden;
-  animation: modalFadeIn 0.3s ease;
-}
-
-@keyframes modalFadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(20px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-.event-modal-header {
-  padding: 16px;
-  color: #fff;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.event-modal-header h3 {
-  margin: 0;
-  font-size: 18px;
-  font-weight: 500;
-}
-
-.event-modal-close-btn {
-  background: none;
-  border: none;
-  color: #fff;
-  font-size: 24px;
-  cursor: pointer;
-  padding: 0;
-  line-height: 1;
-}
-
+/* Event Modal Content Styles */
 .event-modal-body {
-  padding: 16px;
+  padding: 0;
 }
 
 .event-modal-field {
@@ -125,41 +67,6 @@
 
 .event-modal-value {
   color: #333;
-}
-
-.event-modal-footer {
-  padding: 16px;
-  display: flex;
-  justify-content: flex-end;
-  gap: 12px;
-  border-top: 1px solid #eee;
-}
-
-.event-modal-btn {
-  padding: 8px 16px;
-  border-radius: 4px;
-  font-size: 14px;
-  cursor: pointer;
-  border: none;
-  transition: background-color 0.2s ease;
-}
-
-.event-modal-delete-btn {
-  background-color: #f44336;
-  color: #fff;
-}
-
-.event-modal-delete-btn:hover {
-  background-color: #d32f2f;
-}
-
-.event-modal-close-btn {
-  background-color: #f0f0f0;
-  color: #333;
-}
-
-.event-modal-close-btn:hover {
-  background-color: #e0e0e0;
 }
 
 /* Info Section */
@@ -206,10 +113,6 @@
   
   .scheduler-demo-select {
     flex: 1;
-  }
-  
-  .event-modal {
-    width: 95%;
   }
   
   .event-modal-label {

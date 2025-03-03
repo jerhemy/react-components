@@ -46,7 +46,8 @@ export interface SchedulerProps {
   firstDay?: number; // 0 = Sunday, 1 = Monday, etc.
   startTime?: string; // Format: "HH:mm"
   endTime?: string; // Format: "HH:mm"
-  timeslotInterval?: number; // In minutes
+  timeslotInterval?: number; // In minutes, controls the granularity of the time grid
+  timeDisplayInterval?: number; // In minutes, controls how often time labels are displayed
   showAllDay?: boolean;
   showWeekends?: boolean;
   showHeader?: boolean;
@@ -102,10 +103,13 @@ const getTimeSlots = (startTime: string, endTime: string, interval: number): str
   const [startHour, startMinute] = startTime.split(':').map(Number);
   const [endHour, endMinute] = endTime.split(':').map(Number);
 
+  // Ensure interval is at least 1 minute
+  const safeInterval = Math.max(1, interval);
+
   const start = startHour * 60 + startMinute;
   const end = endHour * 60 + endMinute;
 
-  for (let minutes = start; minutes < end; minutes += interval) {
+  for (let minutes = start; minutes < end; minutes += safeInterval) {
     const hour = Math.floor(minutes / 60);
     const minute = minutes % 60;
     slots.push(`${hour.toString().padStart(2, '0')}:${minute.toString().padStart(2, '0')}`);
@@ -193,6 +197,7 @@ const Scheduler: React.FC<SchedulerProps> = ({
   startTime = '08:00',
   endTime = '18:00',
   timeslotInterval = 30,
+  timeDisplayInterval = 60,
   showAllDay = true,
   showWeekends = true,
   showHeader = true,
@@ -218,6 +223,22 @@ const Scheduler: React.FC<SchedulerProps> = ({
   const [isDragging, setIsDragging] = useState(false);
   const [isResizing, setIsResizing] = useState(false);
   const [dragOffset, setDragOffset] = useState({ x: 0, y: 0 });
+  const [prefersDarkMode, setPrefersDarkMode] = useState(false);
+
+  // Check system preference for dark mode
+  useEffect(() => {
+    if (theme === 'auto') {
+      const darkModeMediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
+      setPrefersDarkMode(darkModeMediaQuery.matches);
+      
+      const handleChange = (e: MediaQueryListEvent) => {
+        setPrefersDarkMode(e.matches);
+      };
+      
+      darkModeMediaQuery.addEventListener('change', handleChange);
+      return () => darkModeMediaQuery.removeEventListener('change', handleChange);
+    }
+  }, [theme]);
 
   // Update state when props change
   useEffect(() => {
@@ -814,6 +835,11 @@ const Scheduler: React.FC<SchedulerProps> = ({
     // Calculate positions for overlapping events
     const eventPositions = calculateEventPositions(timeEvents);
 
+    // Calculate the height of each timeslot based on the interval
+    // For smaller intervals, we need smaller heights
+    // Base height: 30px for 30 min intervals
+    const timeslotHeight = Math.max(20, (30 * timeslotInterval) / 30);
+
     return (
       <div className="scheduler-day-view" style={{ height }}>
         {showAllDay && (
@@ -843,16 +869,60 @@ const Scheduler: React.FC<SchedulerProps> = ({
 
         <div className="scheduler-time-grid">
           <div className="scheduler-time-column">
-            {timeSlots.map(time => (
-              <div key={time} className="scheduler-time-slot">
-                <div className="scheduler-time-label">{time}</div>
-              </div>
-            ))}
+            {timeSlots.map((time, index) => {
+              // Only show time labels at intervals specified by timeDisplayInterval
+              const [hour, minute] = time.split(':').map(Number);
+              const totalMinutes = hour * 60 + minute;
+              const [startHour, startMinute] = startTime.split(':').map(Number);
+              const startMinutes = startHour * 60 + startMinute;
+              
+              // Check if this time slot should display a label based on the interval
+              const shouldShowLabel = (totalMinutes - startMinutes) % timeDisplayInterval === 0;
+              
+              // Calculate a dynamic top position based on the timeslot height and interval
+              // This ensures labels don't overlap when using smaller intervals
+              let labelTopPosition = -9;
+              
+              // Adjust position based on timeslot height
+              if (timeslotHeight < 15) {
+                labelTopPosition = -10;
+              } else if (timeslotHeight < 20) {
+                labelTopPosition = -9;
+              } else {
+                labelTopPosition = -8;
+              }
+              
+              // Further adjust based on interval (smaller intervals need more spacing)
+              if (timeDisplayInterval <= 15) {
+                labelTopPosition -= 1;
+              }
+              
+              return (
+                <div 
+                  key={time} 
+                  className="scheduler-time-slot"
+                  style={{ height: `${timeslotHeight}px` }}
+                >
+                  {shouldShowLabel && (
+                    <div 
+                      className="scheduler-time-label"
+                      style={{ top: `${labelTopPosition}px` }}
+                    >
+                      {time}
+                    </div>
+                  )}
+                </div>
+              );
+            })}
           </div>
 
           <div className="scheduler-day-column">
             {timeSlots.map(time => (
-              <div key={time} className="scheduler-time-cell"></div>
+              <div 
+                key={time} 
+                className="scheduler-time-cell"
+                style={{ height: `${timeslotHeight}px` }}
+              ></div>
             ))}
 
             {eventPositions.map(({ event, width, left }) => {
@@ -865,8 +935,9 @@ const Scheduler: React.FC<SchedulerProps> = ({
               const [startHour, startMinute] = startTime.split(':').map(Number);
               const startTimeMinutes = startHour * 60 + startMinute;
 
-              const top = ((startMinutes - startTimeMinutes) / timeslotInterval) * 30; // 30px per timeslot
-              const height = ((endMinutes - startMinutes) / timeslotInterval) * 30;
+              // Adjust the position calculation based on the timeslot height
+              const top = ((startMinutes - startTimeMinutes) / timeslotInterval) * timeslotHeight;
+              const height = ((endMinutes - startMinutes) / timeslotInterval) * timeslotHeight;
 
               return (
                 <div
@@ -915,6 +986,11 @@ const Scheduler: React.FC<SchedulerProps> = ({
 
   // Render week view
   const renderWeekView = () => {
+    // Calculate the height of each timeslot based on the interval
+    // For smaller intervals, we need smaller heights
+    // Base height: 30px for 30 min intervals
+    const timeslotHeight = Math.max(20, (30 * timeslotInterval) / 30);
+
     return (
       <div className="scheduler-week-view" style={{ height }}>
         {showAllDay && (
@@ -966,11 +1042,51 @@ const Scheduler: React.FC<SchedulerProps> = ({
 
         <div className="scheduler-time-grid">
           <div className="scheduler-time-column">
-            {timeSlots.map(time => (
-              <div key={time} className="scheduler-time-slot">
-                <div className="scheduler-time-label">{time}</div>
-              </div>
-            ))}
+            {timeSlots.map((time, index) => {
+              // Only show time labels at intervals specified by timeDisplayInterval
+              const [hour, minute] = time.split(':').map(Number);
+              const totalMinutes = hour * 60 + minute;
+              const [startHour, startMinute] = startTime.split(':').map(Number);
+              const startMinutes = startHour * 60 + startMinute;
+              
+              // Check if this time slot should display a label based on the interval
+              const shouldShowLabel = (totalMinutes - startMinutes) % timeDisplayInterval === 0;
+              
+              // Calculate a dynamic top position based on the timeslot height and interval
+              // This ensures labels don't overlap when using smaller intervals
+              let labelTopPosition = -9;
+              
+              // Adjust position based on timeslot height
+              if (timeslotHeight < 15) {
+                labelTopPosition = -10;
+              } else if (timeslotHeight < 20) {
+                labelTopPosition = -9;
+              } else {
+                labelTopPosition = -8;
+              }
+              
+              // Further adjust based on interval (smaller intervals need more spacing)
+              if (timeDisplayInterval <= 15) {
+                labelTopPosition -= 1;
+              }
+              
+              return (
+                <div 
+                  key={time} 
+                  className="scheduler-time-slot"
+                  style={{ height: `${timeslotHeight}px` }}
+                >
+                  {shouldShowLabel && (
+                    <div 
+                      className="scheduler-time-label"
+                      style={{ top: `${labelTopPosition}px` }}
+                    >
+                      {time}
+                    </div>
+                  )}
+                </div>
+              );
+            })}
           </div>
 
           <div className="scheduler-day-columns">
@@ -995,7 +1111,11 @@ const Scheduler: React.FC<SchedulerProps> = ({
               return (
                 <div key={day.toISOString()} className="scheduler-day-column">
                   {timeSlots.map(time => (
-                    <div key={time} className="scheduler-time-cell"></div>
+                    <div 
+                      key={time} 
+                      className="scheduler-time-cell"
+                      style={{ height: `${timeslotHeight}px` }}
+                    ></div>
                   ))}
 
                   {eventPositions.map(({ event, width, left }) => {
@@ -1008,8 +1128,9 @@ const Scheduler: React.FC<SchedulerProps> = ({
                     const [startHour, startMinute] = startTime.split(':').map(Number);
                     const startTimeMinutes = startHour * 60 + startMinute;
 
-                    const top = ((startMinutes - startTimeMinutes) / timeslotInterval) * 30; // 30px per timeslot
-                    const height = ((endMinutes - startMinutes) / timeslotInterval) * 30;
+                    // Adjust the position calculation based on the timeslot height
+                    const top = ((startMinutes - startTimeMinutes) / timeslotInterval) * timeslotHeight;
+                    const height = ((endMinutes - startMinutes) / timeslotInterval) * timeslotHeight;
 
                     return (
                       <div
@@ -1258,12 +1379,9 @@ const Scheduler: React.FC<SchedulerProps> = ({
   };
 
   return (
-    <div
-      className={`scheduler ${theme === 'dark' ? 'scheduler-dark' : ''}`}
-      style={{ height }}
-    >
-      {renderToolbar()}
-      {renderHeader()}
+    <div className={`scheduler ${theme === 'dark' || (theme === 'auto' && prefersDarkMode) ? 'scheduler-dark' : ''}`} style={{ height }}>
+      {showToolbar && renderToolbar()}
+      {showHeader && renderHeader()}
       <div className="scheduler-content">
         {renderView()}
       </div>

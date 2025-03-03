@@ -2,6 +2,7 @@ import './SchedulerDemo.css';
 
 import React, { useCallback, useEffect, useState } from 'react';
 import Scheduler, { Event, Resource, ViewType } from './Scheduler';
+import Modal from './Modal';
 
 // Generate a random ID
 const generateId = (): string => {
@@ -97,6 +98,8 @@ const SchedulerDemo: React.FC = () => {
     const [startTime, setStartTime] = useState('08:00');
     const [endTime, setEndTime] = useState('18:00');
     const [firstDay, setFirstDay] = useState(0); // 0 = Sunday, 1 = Monday
+    const [timeDisplayInterval, setTimeDisplayInterval] = useState(60); // Default to 60 minutes (1 hour)
+    const [timeslotInterval, setTimeslotInterval] = useState(30); // Default to 30 minutes
 
     // Generate initial events
     useEffect(() => {
@@ -168,6 +171,16 @@ const SchedulerDemo: React.FC = () => {
     // Handle show all-day toggle
     const handleShowAllDayToggle = useCallback(() => {
         setShowAllDay(prev => !prev);
+    }, []);
+
+    // Handle time display interval change
+    const handleTimeDisplayIntervalChange = useCallback((e: React.ChangeEvent<HTMLSelectElement>) => {
+        setTimeDisplayInterval(parseInt(e.target.value));
+    }, []);
+
+    // Handle timeslot interval change
+    const handleTimeslotIntervalChange = useCallback((e: React.ChangeEvent<HTMLSelectElement>) => {
+        setTimeslotInterval(parseInt(e.target.value));
     }, []);
 
     // Handle event modal close
@@ -280,6 +293,41 @@ const SchedulerDemo: React.FC = () => {
                         Show All-Day Events
                     </label>
                 </div>
+
+                <div className="scheduler-demo-control-group">
+                    <label htmlFor="time-display-interval-select">Time Labels:</label>
+                    <select
+                        id="time-display-interval-select"
+                        value={timeDisplayInterval}
+                        onChange={handleTimeDisplayIntervalChange}
+                        className="scheduler-demo-select"
+                    >
+                        <option value="1">Every 1 min</option>
+                        <option value="5">Every 5 min</option>
+                        <option value="10">Every 10 min</option>
+                        <option value="15">Every 15 min</option>
+                        <option value="30">Every 30 min</option>
+                        <option value="60">Every hour</option>
+                        <option value="120">Every 2 hours</option>
+                    </select>
+                </div>
+                
+                <div className="scheduler-demo-control-group">
+                    <label htmlFor="timeslot-interval-select">Time Slots:</label>
+                    <select
+                        id="timeslot-interval-select"
+                        value={timeslotInterval}
+                        onChange={handleTimeslotIntervalChange}
+                        className="scheduler-demo-select"
+                    >
+                        <option value="1">1 min</option>
+                        <option value="5">5 min</option>
+                        <option value="10">10 min</option>
+                        <option value="15">15 min</option>
+                        <option value="30">30 min</option>
+                        <option value="60">60 min</option>
+                    </select>
+                </div>
             </div>
 
             <div className="scheduler-container">
@@ -293,6 +341,8 @@ const SchedulerDemo: React.FC = () => {
                     endTime={endTime}
                     showAllDay={showAllDay}
                     showWeekends={showWeekends}
+                    timeDisplayInterval={timeDisplayInterval}
+                    timeslotInterval={timeslotInterval}
                     onEventClick={handleEventClick}
                     onEventCreate={handleEventCreate}
                     onEventUpdate={handleEventUpdate}
@@ -309,83 +359,74 @@ const SchedulerDemo: React.FC = () => {
 
             {/* Event Modal */}
             {showEventModal && selectedEvent && (
-                <div className="event-modal-backdrop">
-                    <div className="event-modal">
-                        <div
-                            className="event-modal-header"
-                            style={{ backgroundColor: selectedEvent.color || '#3174ad' }}
-                        >
-                            <h3>{selectedEvent.title}</h3>
+                <Modal
+                    isOpen={showEventModal}
+                    onClose={handleCloseEventModal}
+                    title={selectedEvent.title}
+                    headerColor={selectedEvent.color || '#3174ad'}
+                    footer={
+                        <>
                             <button
-                                className="event-modal-close-btn"
-                                onClick={handleCloseEventModal}
-                            >
-                                &times;
-                            </button>
-                        </div>
-
-                        <div className="event-modal-body">
-                            <div className="event-modal-field">
-                                <span className="event-modal-label">Date:</span>
-                                <span className="event-modal-value">
-                                    {selectedEvent.allDay
-                                        ? new Date(selectedEvent.start).toLocaleDateString()
-                                        : `${new Date(selectedEvent.start).toLocaleDateString()}`
-                                    }
-                                </span>
-                            </div>
-
-                            <div className="event-modal-field">
-                                <span className="event-modal-label">Time:</span>
-                                <span className="event-modal-value">
-                                    {selectedEvent.allDay
-                                        ? 'All Day'
-                                        : `${new Date(selectedEvent.start).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })} - 
-                       ${new Date(selectedEvent.end).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}`
-                                    }
-                                </span>
-                            </div>
-
-                            {selectedEvent.location && (
-                                <div className="event-modal-field">
-                                    <span className="event-modal-label">Location:</span>
-                                    <span className="event-modal-value">{selectedEvent.location}</span>
-                                </div>
-                            )}
-
-                            {selectedEvent.resource && (
-                                <div className="event-modal-field">
-                                    <span className="event-modal-label">Resource:</span>
-                                    <span className="event-modal-value">
-                                        {resources.find(r => r.id === selectedEvent.resource)?.name || selectedEvent.resource}
-                                    </span>
-                                </div>
-                            )}
-
-                            {selectedEvent.description && (
-                                <div className="event-modal-field">
-                                    <span className="event-modal-label">Description:</span>
-                                    <span className="event-modal-value">{selectedEvent.description}</span>
-                                </div>
-                            )}
-                        </div>
-
-                        <div className="event-modal-footer">
-                            <button
-                                className="event-modal-btn event-modal-delete-btn"
+                                className="modal-btn modal-danger-btn"
                                 onClick={handleDeleteFromModal}
                             >
                                 Delete
                             </button>
                             <button
-                                className="event-modal-btn event-modal-close-btn"
+                                className="modal-btn modal-secondary-btn"
                                 onClick={handleCloseEventModal}
                             >
                                 Close
                             </button>
+                        </>
+                    }
+                >
+                    <div className="event-modal-body">
+                        <div className="event-modal-field">
+                            <span className="event-modal-label">Date:</span>
+                            <span className="event-modal-value">
+                                {selectedEvent.allDay
+                                    ? new Date(selectedEvent.start).toLocaleDateString()
+                                    : `${new Date(selectedEvent.start).toLocaleDateString()}`
+                                }
+                            </span>
                         </div>
+
+                        <div className="event-modal-field">
+                            <span className="event-modal-label">Time:</span>
+                            <span className="event-modal-value">
+                                {selectedEvent.allDay
+                                    ? 'All Day'
+                                    : `${new Date(selectedEvent.start).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })} - 
+                           ${new Date(selectedEvent.end).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}`
+                                }
+                            </span>
+                        </div>
+
+                        {selectedEvent.location && (
+                            <div className="event-modal-field">
+                                <span className="event-modal-label">Location:</span>
+                                <span className="event-modal-value">{selectedEvent.location}</span>
+                            </div>
+                        )}
+
+                        {selectedEvent.resource && (
+                            <div className="event-modal-field">
+                                <span className="event-modal-label">Resource:</span>
+                                <span className="event-modal-value">
+                                    {resources.find(r => r.id === selectedEvent.resource)?.name || selectedEvent.resource}
+                                </span>
+                            </div>
+                        )}
+
+                        {selectedEvent.description && (
+                            <div className="event-modal-field">
+                                <span className="event-modal-label">Description:</span>
+                                <span className="event-modal-value">{selectedEvent.description}</span>
+                            </div>
+                        )}
                     </div>
-                </div>
+                </Modal>
             )}
 
             <div className="scheduler-demo-info">
@@ -393,6 +434,9 @@ const SchedulerDemo: React.FC = () => {
                 <ul>
                     <li>Multiple views: Day, Week, Month, and Agenda</li>
                     <li>Customizable time range and first day of week</li>
+                    <li>Adjustable time label display intervals (1 min to 2 hours)</li>
+                    <li>Flexible time slot granularity (1 min to 60 min)</li>
+                    <li>Dynamic timeline that adjusts based on interval settings</li>
                     <li>Support for all-day events</li>
                     <li>Event details modal</li>
                     <li>Light and dark themes</li>
@@ -410,6 +454,8 @@ const SchedulerDemo: React.FC = () => {
                 <p>
                     This component is built with React and TypeScript, using CSS for styling. It implements efficient rendering
                     techniques to handle large numbers of events and provides a responsive design that works on both desktop and mobile devices.
+                    The timeline automatically adjusts its scale based on the selected time intervals, allowing for both high-level overviews
+                    and detailed minute-by-minute scheduling.
                 </p>
             </div>
         </div>
