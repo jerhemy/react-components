@@ -1,0 +1,244 @@
+.select-container {
+    position: relative;
+    width: 100%;
+}
+
+.select-container.disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+.select-input {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 4px;
+    padding: 8px 12px;
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    background-color: var(--bg-color);
+    cursor: pointer;
+    transition: all 0.2s;
+    min-height: 40px;
+}
+
+.select-input:hover:not(.disabled) {
+    border-color: var(--primary-color);
+}
+
+.select-input.open {
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 2px var(--primary-shadow);
+}
+
+.select-input:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 2px var(--primary-shadow);
+}
+
+.select-input.loading {
+    cursor: wait;
+}
+
+.select-input.loading .select-arrow {
+    animation: spin 1s linear infinite;
+}
+
+.select-value {
+    flex: 1;
+    min-width: 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    color: var(--text-color);
+}
+
+.select-chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+    flex: 1;
+    min-width: 0;
+}
+
+.with-chips .select-input {
+    min-height: 40px;
+    height: auto;
+    padding: 4px 8px;
+}
+
+.with-chips .select-search {
+    min-width: 60px;
+    width: auto;
+    flex: 0 1 auto;
+    margin: 2px;
+}
+
+.select-search {
+    border: none;
+    outline: none;
+    background: transparent;
+    color: var(--text-color);
+    font-size: inherit;
+    font-family: inherit;
+    min-width: 0;
+    padding: 2px;
+    width: 100%;
+}
+
+.select-arrow {
+    margin-left: 8px;
+    color: var(--text-color);
+    transition: transform 0.2s;
+    flex-shrink: 0;
+}
+
+.select-arrow.open {
+    transform: rotate(180deg);
+}
+
+.select-dropdown {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    margin-top: 4px;
+    max-height: 250px;
+    overflow-y: auto;
+    background: var(--bg-color);
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    z-index: 1000;
+}
+
+.select-group {
+    padding: 0;
+}
+
+.select-group-label {
+    padding: 8px 12px;
+    font-weight: 500;
+    color: var(--text-color);
+    background: var(--hover-color);
+    border-bottom: 1px solid var(--border-color);
+}
+
+.select-option {
+    padding: 8px 12px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--text-color);
+    transition: background-color 0.2s, color 0.2s;
+}
+
+.select-option:hover {
+    background: var(--hover-color);
+}
+
+.select-option.selected {
+    background: var(--selected-color);
+    color: var(--primary-color);
+}
+
+.select-option.highlighted {
+    background: var(--hover-color);
+}
+
+.select-option.selected.highlighted {
+    background: var(--selected-hover-color, var(--selected-color));
+}
+
+.select-checkbox {
+    margin: 0;
+    width: 16px;
+    height: 16px;
+}
+
+.select-message {
+    padding: 12px;
+    text-align: center;
+    color: var(--text-color);
+}
+
+.select-message.error {
+    color: var(--error-color);
+}
+
+/* Chip styles */
+.chip {
+    display: inline-flex;
+    align-items: center;
+    padding: 2px 8px;
+    margin: 2px;
+    background-color: var(--selected-color);
+    color: var(--primary-color);
+    border-radius: 16px;
+    font-size: 0.875rem;
+    line-height: 1.5;
+    max-width: 100%;
+    transition: background-color 0.2s;
+}
+
+.chip:hover {
+    background-color: var(--selected-hover-color, var(--selected-color));
+}
+
+.chip-label {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.chip-remove {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    margin-left: 4px;
+    padding: 0;
+    width: 16px;
+    height: 16px;
+    border: none;
+    background: none;
+    color: inherit;
+    font-size: 1rem;
+    line-height: 1;
+    cursor: pointer;
+    border-radius: 50%;
+    transition: background-color 0.2s;
+}
+
+.chip-remove:hover {
+    background-color: rgba(0, 0, 0, 0.1);
+}
+
+@keyframes spin {
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+/* Scrollbar styles */
+.select-dropdown::-webkit-scrollbar {
+    width: 8px;
+}
+
+.select-dropdown::-webkit-scrollbar-track {
+    background: var(--bg-color);
+    border-radius: 4px;
+}
+
+.select-dropdown::-webkit-scrollbar-thumb {
+    background: var(--border-color);
+    border-radius: 4px;
+}
+
+.select-dropdown::-webkit-scrollbar-thumb:hover {
+    background: var(--text-color);
+} 

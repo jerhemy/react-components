@@ -1,0 +1,311 @@
+.routetracker-demo {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 40px 20px;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+  background-color: var(--bg-color);
+  color: var(--text-color);
+}
+
+.routetracker-demo h2 {
+  text-align: center;
+  color: var(--heading-color);
+  margin-bottom: 30px;
+  font-size: 2rem;
+}
+
+.demo-info {
+  background-color: var(--hover-color);
+  border-radius: 8px;
+  padding: 24px;
+  border: 1px solid var(--border-color);
+  margin-bottom: 40px;
+}
+
+.demo-info h3 {
+  margin-top: 0;
+  color: var(--heading-color);
+  font-size: 1.5rem;
+  margin-bottom: 16px;
+}
+
+.demo-info p {
+  margin-bottom: 16px;
+  line-height: 1.6;
+  color: var(--text-color);
+  font-size: 1rem;
+}
+
+.demo-variation {
+  background-color: var(--bg-color);
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  margin-bottom: 40px;
+  overflow: hidden;
+}
+
+.demo-variation h3 {
+  margin: 0;
+  padding: 20px 24px;
+  background-color: var(--hover-color);
+  color: var(--heading-color);
+  font-size: 1.25rem;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.demo-variation p {
+  padding: 16px 24px;
+  margin: 0;
+  color: var(--text-color);
+  font-size: 1rem;
+  line-height: 1.5;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.demo-variation h4 {
+  margin: 0;
+  padding: 16px 24px;
+  color: var(--heading-color);
+  font-size: 1rem;
+  background-color: var(--hover-color);
+  border-bottom: 1px solid var(--border-color);
+}
+
+.demo-preview {
+  background-color: var(--bg-color);
+  border-bottom: 1px solid var(--border-color);
+}
+
+.preview-container {
+  padding: 24px;
+}
+
+.demo-code {
+  background-color: var(--bg-color);
+}
+
+.demo-code pre {
+  margin: 0;
+  padding: 24px;
+  background-color: var(--hover-color);
+  border-radius: 0;
+  font-size: 0.875rem;
+  line-height: 1.5;
+  overflow-x: auto;
+}
+
+.demo-code code {
+  font-family: 'Fira Code', monospace;
+}
+
+/* Route Tracker specific styles */
+.route-demo-container {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.controls {
+  margin: 20px 0;
+  padding: 16px;
+  background-color: var(--hover-color);
+  border-radius: 8px;
+  border: 1px solid var(--border-color);
+}
+
+.controls label {
+  display: block;
+  color: var(--text-color);
+  font-weight: 500;
+  margin-bottom: 8px;
+}
+
+.distance-slider {
+  width: 100%;
+  height: 8px;
+  -webkit-appearance: none;
+  appearance: none;
+  background: var(--border-color);
+  outline: none;
+  border-radius: 4px;
+  margin-top: 8px;
+}
+
+.distance-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 20px;
+  height: 20px;
+  background: var(--primary-color);
+  cursor: pointer;
+  border-radius: 50%;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.distance-slider::-moz-range-thumb {
+  width: 20px;
+  height: 20px;
+  background: var(--primary-color);
+  cursor: pointer;
+  border-radius: 50%;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.stops-table {
+  width: 100%;
+  border-collapse: collapse;
+  background-color: var(--bg-color);
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.stops-table th,
+.stops-table td {
+  padding: 12px 16px;
+  text-align: left;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.stops-table th {
+  background-color: var(--hover-color);
+  font-weight: 600;
+  color: var(--heading-color);
+}
+
+.stops-table tr:last-child td {
+  border-bottom: none;
+}
+
+.stops-table tr.passed {
+  background-color: var(--success-bg);
+}
+
+.status-badge {
+  display: inline-block;
+  padding: 4px 8px;
+  border-radius: 12px;
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+
+.status-badge.passed {
+  background-color: var(--success-bg);
+  color: var(--success-text);
+}
+
+.status-badge.upcoming {
+  background-color: var(--warning-bg);
+  color: var(--warning-text);
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .routetracker-demo {
+    padding: 20px 15px;
+  }
+  
+  .routetracker-demo h2 {
+    font-size: 1.5rem;
+  }
+  
+  .demo-info {
+    padding: 20px;
+  }
+  
+  .demo-variation h3 {
+    padding: 16px 20px;
+  }
+  
+  .demo-variation p,
+  .demo-variation h4,
+  .preview-container,
+  .demo-code pre {
+    padding: 16px 20px;
+  }
+  
+  .route-tracker-container {
+    height: 300px;
+  }
+  
+  .stop-label {
+    font-size: 12px;
+  }
+  
+  .vehicle-info {
+    font-size: 12px;
+  }
+  
+  .controls {
+    padding: 12px;
+  }
+  
+  .stops-table th,
+  .stops-table td {
+    padding: 8px 12px;
+    font-size: 0.875rem;
+  }
+  
+  .status-badge {
+    font-size: 0.75rem;
+    padding: 3px 6px;
+  }
+}
+
+@media (max-width: 480px) {
+  .routetracker-demo h2 {
+    font-size: 1.25rem;
+  }
+  
+  .demo-info h3 {
+    font-size: 1.125rem;
+  }
+  
+  .demo-variation h3 {
+    font-size: 1rem;
+  }
+  
+  .demo-code pre {
+    font-size: 0.8125rem;
+  }
+  
+  .route-tracker-container {
+    height: 250px;
+    padding: 10px;
+  }
+  
+  .stop-icon {
+    width: 8px;
+    height: 8px;
+    margin: 0 6px;
+  }
+  
+  .vehicle-icon {
+    width: 16px;
+    height: 16px;
+    margin: 0 6px;
+  }
+  
+  .stop-label {
+    font-size: 11px;
+  }
+  
+  .vehicle-info {
+    font-size: 11px;
+  }
+  
+  .controls {
+    padding: 8px;
+  }
+  
+  .stops-table th,
+  .stops-table td {
+    padding: 6px 8px;
+    font-size: 0.75rem;
+  }
+  
+  .status-badge {
+    font-size: 0.6875rem;
+    padding: 2px 4px;
+  }
+} 

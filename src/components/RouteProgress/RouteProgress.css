@@ -1,0 +1,124 @@
+.route-progress {
+  padding: 20px;
+  width: 100%;
+  max-width: 400px;
+}
+
+.route-progress-line {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  position: relative;
+}
+
+.route-progress-stop {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  position: relative;
+  z-index: 1;
+}
+
+.route-progress-dot {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background-color: var(--text-color);
+  border: 3px solid var(--bg-color);
+  box-shadow: 0 0 0 2px var(--text-color);
+}
+
+.route-progress-home-icon {
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--text-color);
+  border-radius: 8px;
+  padding: 4px;
+}
+
+.route-progress-home-icon svg {
+  color: var(--bg-color);
+}
+
+.route-progress-label {
+  font-size: 1.125rem;
+  font-weight: 500;
+  color: var(--text-color);
+}
+
+.route-progress-connector {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-left: 7px;
+  height: 80px;
+}
+
+.route-progress-dash {
+  width: 2px;
+  height: 8px;
+  background-color: var(--text-color);
+  margin: 2px 0;
+}
+
+.route-progress-stop.active .route-progress-dot,
+.route-progress-stop.active .route-progress-home-icon {
+  background-color: var(--primary-color);
+  box-shadow: 0 0 0 2px var(--primary-color);
+}
+
+.route-progress-stop.active .route-progress-label {
+  color: var(--primary-color);
+}
+
+/* Pre-route styles */
+.route-progress-pre-route {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  margin-top: 16px;
+}
+
+.route-progress-pre-route .route-progress-connector {
+  margin-top: 8px;
+  height: 60px;
+}
+
+.route-progress-pre-route .route-progress-dot.vehicle-dot {
+  background-color: var(--primary-color);
+  border-color: var(--bg-color);
+  box-shadow: 0 0 0 2px var(--primary-color);
+  animation: pulse 2s infinite;
+}
+
+.route-progress-distance {
+  font-size: 0.875rem;
+  color: var(--text-color);
+  margin-top: 8px;
+  margin-left: 7px;
+}
+
+@keyframes pulse {
+  0% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.1);
+    opacity: 0.8;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+/* Dark theme adjustments */
+@media (prefers-color-scheme: dark) {
+  .route-progress-dot {
+    border-color: var(--bg-color);
+  }
+} 

@@ -32,7 +32,6 @@
   font-weight: 600;
   font-size: 1rem;
   position: relative;
-  top: -0.75rem;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
 }
 
@@ -54,7 +53,6 @@
   font-size: 1rem;
   transition: background-color 0.2s, color 0.2s, box-shadow 0.2s;
   position: relative;
-  top: -0.75rem;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
 }
 
@@ -118,7 +116,6 @@
 
 .fieldset-content {
   padding: 1.25rem;
-  border-top: 1px solid #dee2e6;
 }
 
 .fieldset-collapsed .fieldset-content {

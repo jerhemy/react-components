@@ -1,0 +1,25 @@
+:root {
+  /* Colors */
+  --primary-color: #000000;
+  --primary-shadow: rgba(0, 0, 0, 0.2);
+  --error-color: #dc2626;
+  --error-shadow: rgba(220, 38, 38, 0.2);
+  --border-color: #d1d5db;
+  --bg-color: #ffffff;
+  --text-color: #111827;
+  --hover-color: #f3f4f6;
+}
+
+/* Dark theme variables if needed */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --primary-color: #3b82f6;
+    --primary-shadow: rgba(59, 130, 246, 0.2);
+    --error-color: #ef4444;
+    --error-shadow: rgba(239, 68, 68, 0.2);
+    --border-color: #374151;
+    --bg-color: #1f2937;
+    --text-color: #f9fafb;
+    --hover-color: #374151;
+  }
+} 

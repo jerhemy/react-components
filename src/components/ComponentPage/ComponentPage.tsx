@@ -1,21 +1,39 @@
-import React from 'react';
-import { useParams } from 'react-router-dom';
-import { componentData } from '../../data/componentData';
-import CodeBlock from '../CodeBlock/CodeBlock';
 import './ComponentPage.css';
 
-// Import demo components
-import JsonTreeViewerDemo from '../JsonTreeViewerDemo';
+import ButtonDemo from '../Button/ButtonDemo';
+import CheckboxDemo from '../../pages/CheckboxDemo';
+import CodeBlock from '../CodeBlock/CodeBlock';
 import DataGridDemo from '../DataGridDemo';
-import RouteTrackerDemo from '../RouteTrackerDemo';
-import GlobalSearchDemo from '../GlobalSearchDemo';
-import SchedulerDemo from '../SchedulerDemo';
-import SelectDemo from '../SelectDemo';
 import FieldsetDemo from '../FieldsetDemo';
-import ModalDemo from '../ModalDemo';
+import FormGroupDemo from '../../pages/FormGroupDemo';
+import GlobalSearchDemo from '../GlobalSearch/GlobalSearchDemo';
 import IconDemo from '../IconDemo';
 import InputDemo from '../InputDemo';
-import ButtonDemo from '../ButtonDemo';
+import JsonTreeViewerDemo from '../JsonTreeViewer/JsonTreeViewerDemo';
+import ModalDemo from '../ModalDemo';
+import RadioDemo from '../../pages/RadioDemo';
+import React from 'react';
+import RouteTrackerDemo from '../RouteTracker/RouteTrackerDemo';
+import SchedulerDemo from '../SchedulerDemo';
+import SelectDemo from '../../demo-pages/SelectDemo';
+import TableDemo from '../Table/TableDemo';
+import { componentData } from '../../data/componentData';
+import { useParams } from 'react-router-dom';
+import RouteProgressDemo from '../../pages/RouteProgressDemo';
+
+// Import demo components
+
+
+
+
+
+
+
+
+
+
+
+
 
 interface ApiProperty {
   name: string;
@@ -49,6 +67,7 @@ const demoComponents: Record<string, React.ComponentType> = {
   jsonViewer: JsonTreeViewerDemo,
   dataGrid: DataGridDemo,
   routeTracker: RouteTrackerDemo,
+  routeProgress: RouteProgressDemo,
   globalSearch: GlobalSearchDemo,
   scheduler: SchedulerDemo,
   select: SelectDemo,
@@ -57,6 +76,10 @@ const demoComponents: Record<string, React.ComponentType> = {
   icon: IconDemo,
   input: InputDemo,
   button: ButtonDemo,
+  table: TableDemo,
+  formGroup: FormGroupDemo,
+  radio: RadioDemo,
+  checkbox: CheckboxDemo,
 };
 
 const ComponentPage: React.FC = () => {
@@ -72,7 +95,7 @@ const ComponentPage: React.FC = () => {
     <div className="component-page">
       <h1>{component.name}</h1>
       <p className="component-description">{component.description}</p>
-      
+
       {component.codeExample && (
         <div className="example-container">
           <div className="example-preview">
@@ -81,7 +104,7 @@ const ComponentPage: React.FC = () => {
           <CodeBlock code={component.codeExample} language="jsx" />
         </div>
       )}
-      
+
       {component.features && component.features.length > 0 && (
         <div className="features-section">
           <h2>Features</h2>
@@ -92,7 +115,7 @@ const ComponentPage: React.FC = () => {
           </ul>
         </div>
       )}
-      
+
       {component.api && (
         <div className="api-section">
           <h2>API</h2>
