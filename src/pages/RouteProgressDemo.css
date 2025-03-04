@@ -1,0 +1,261 @@
+.route-progress-demo {
+  padding: 20px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.direction-info {
+  text-align: center;
+  color: #666;
+  font-style: italic;
+  margin-bottom: 20px;
+}
+
+.demo-container {
+  display: flex;
+  gap: 30px;
+  margin: 20px 0;
+}
+
+.controls-panel {
+  flex: 1;
+  background-color: #f8f9fa;
+  border-radius: 8px;
+  padding: 20px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.tracker-container {
+  flex: 1;
+  min-width: 300px;
+  height: 600px;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.direction-labels {
+  position: relative;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.direction-label {
+  text-align: center;
+  padding: 8px;
+  background-color: #f0f0f0;
+  font-weight: 500;
+  color: #333;
+}
+
+.direction-label.top {
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.direction-label.bottom {
+  border-top: 1px solid #e0e0e0;
+}
+
+.control-group {
+  margin-bottom: 20px;
+}
+
+.control-group label {
+  display: block;
+  margin-bottom: 8px;
+  font-weight: 500;
+  color: #333;
+}
+
+.slider {
+  width: 100%;
+  height: 6px;
+  background: #e0e0e0;
+  border-radius: 3px;
+  appearance: none;
+  outline: none;
+}
+
+.slider::-webkit-slider-thumb {
+  appearance: none;
+  width: 18px;
+  height: 18px;
+  background: #2196f3;
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+.slider::-moz-range-thumb {
+  width: 18px;
+  height: 18px;
+  background: #2196f3;
+  border-radius: 50%;
+  cursor: pointer;
+  border: none;
+}
+
+.toggle-container {
+  position: relative;
+  display: inline-block;
+  width: 50px;
+  height: 24px;
+}
+
+.toggle {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.toggle-label {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #ccc;
+  transition: .4s;
+  border-radius: 24px;
+}
+
+.toggle-label:before {
+  position: absolute;
+  content: "";
+  height: 16px;
+  width: 16px;
+  left: 4px;
+  bottom: 4px;
+  background-color: white;
+  transition: .4s;
+  border-radius: 50%;
+}
+
+.toggle:checked + .toggle-label {
+  background-color: #2196F3;
+}
+
+.toggle:checked + .toggle-label:before {
+  transform: translateX(26px);
+}
+
+.control-button {
+  background-color: #2196f3;
+  color: white;
+  border: none;
+  padding: 10px 15px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: 500;
+  margin-right: 10px;
+  transition: background-color 0.3s;
+}
+
+.control-button:hover {
+  background-color: #0d8bf2;
+}
+
+.control-button:last-child {
+  margin-right: 0;
+}
+
+.route-legend {
+  margin-top: 30px;
+  padding-top: 20px;
+  border-top: 1px solid #e0e0e0;
+}
+
+.route-legend h4 {
+  margin-top: 0;
+  margin-bottom: 15px;
+  color: #333;
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.legend-marker {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background-color: #ffffff;
+  border: 3px solid #cccccc;
+  margin-right: 10px;
+}
+
+.legend-marker.completed {
+  background-color: #4caf50;
+  border-color: #4caf50;
+}
+
+.legend-marker.passed {
+  background-color: #2196f3;
+  border-color: #2196f3;
+}
+
+.legend-gps-icon {
+  width: 24px;
+  height: 24px;
+  position: relative;
+  margin-right: 10px;
+}
+
+.layout-info {
+  margin-top: 30px;
+  padding-top: 20px;
+  border-top: 1px solid #e0e0e0;
+}
+
+.layout-info h4 {
+  margin-top: 0;
+  margin-bottom: 15px;
+  color: #333;
+}
+
+.layout-info ul {
+  padding-left: 20px;
+  margin: 0;
+}
+
+.layout-info li {
+  margin-bottom: 8px;
+  color: #555;
+}
+
+.demo-info {
+  margin-top: 30px;
+  background-color: #f8f9fa;
+  border-radius: 8px;
+  padding: 20px;
+}
+
+.demo-info h3 {
+  margin-top: 0;
+  color: #333;
+}
+
+.demo-info ul {
+  padding-left: 20px;
+}
+
+.demo-info li {
+  margin-bottom: 8px;
+  color: #555;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .demo-container {
+    flex-direction: column;
+  }
+  
+  .tracker-container {
+    min-height: 400px;
+  }
+} 

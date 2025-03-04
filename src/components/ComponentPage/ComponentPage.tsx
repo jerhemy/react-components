@@ -20,6 +20,7 @@ import TableDemo from '../Table/TableDemo';
 import { componentData } from '../../data/componentData';
 import { useParams } from 'react-router-dom';
 import RouteProgressDemo from '../../pages/RouteProgressDemo';
+import CardDemo from '../Card/CardDemo';
 
 // Import demo components
 
@@ -64,6 +65,7 @@ interface ComponentData {
 
 // Map component IDs to their demo components
 const demoComponents: Record<string, React.ComponentType> = {
+  card: CardDemo,
   jsonViewer: JsonTreeViewerDemo,
   dataGrid: DataGridDemo,
   routeTracker: RouteTrackerDemo,

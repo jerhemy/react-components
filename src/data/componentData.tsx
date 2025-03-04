@@ -36,6 +36,7 @@ export const componentCategories = {
       { id: 'dataGrid', label: 'Data Grid' },
       { id: 'jsonViewer', label: 'JSON Viewer' },
       { id: 'table', label: 'Table' },
+      { id: 'gauge', label: 'Gauge' }
     ]
   },
   layout: {
@@ -1138,4 +1139,132 @@ function MyComponent() {
       'Animated vehicle location indicator'
     ]
   },
+  card: {
+    name: 'Card',
+    description: 'A versatile card component for displaying content in a contained, styled box.',
+    codeExample: `import { Card } from 'your-component-library/Card';
+
+function MyComponent() {
+  return (
+    <Card 
+      title="Card Title" 
+      subtitle="Card Subtitle"
+      elevation={1}
+      hoverable
+    >
+      <p>This is the card content.</p>
+    </Card>
+  );
+}`,
+    api: [
+      {
+        name: 'title',
+        type: 'ReactNode',
+        required: false,
+        description: 'Card title displayed in the header'
+      },
+      {
+        name: 'subtitle',
+        type: 'ReactNode',
+        required: false,
+        description: 'Card subtitle displayed below the title'
+      },
+      {
+        name: 'children',
+        type: 'ReactNode',
+        required: true,
+        description: 'Card content'
+      },
+      {
+        name: 'footer',
+        type: 'ReactNode',
+        required: false,
+        description: 'Optional footer content'
+      },
+      {
+        name: 'headerActions',
+        type: 'ReactNode',
+        required: false,
+        description: 'Optional actions displayed in the header'
+      },
+      {
+        name: 'imageUrl',
+        type: 'string',
+        required: false,
+        description: 'URL of an image to display at the top of the card'
+      },
+      {
+        name: 'imageAlt',
+        type: 'string',
+        required: false,
+        default: "''",
+        description: 'Alt text for the image'
+      },
+      {
+        name: 'elevation',
+        type: '0 | 1 | 2 | 3',
+        required: false,
+        default: '1',
+        description: 'Shadow elevation level'
+      },
+      {
+        name: 'hoverable',
+        type: 'boolean',
+        required: false,
+        default: 'false',
+        description: 'Whether the card has a hover effect'
+      },
+      {
+        name: 'bordered',
+        type: 'boolean',
+        required: false,
+        default: 'true',
+        description: 'Whether the card has a border'
+      },
+      {
+        name: 'onClick',
+        type: 'function',
+        required: false,
+        description: 'Click handler for the card'
+      },
+      {
+        name: 'className',
+        type: 'string',
+        required: false,
+        default: "''",
+        description: 'Additional CSS class names'
+      },
+      {
+        name: 'style',
+        type: 'CSSProperties',
+        required: false,
+        description: 'Inline styles for the card'
+      }
+    ],
+    features: [
+      'Multiple elevation levels for different shadow depths',
+      'Optional hover effect for interactive cards',
+      'Support for images, titles, subtitles, and footers',
+      'Customizable header actions',
+      'Responsive design that works on all screen sizes',
+      'Dark theme support'
+    ]
+  },
 }; 
+
+export const componentList = [
+  { id: 'button', label: 'Button' },
+  { id: 'card', label: 'Card' },
+  { id: 'checkbox', label: 'Checkbox' },
+  { id: 'dropdown', label: 'Dropdown' },
+  { id: 'globalSearch', label: 'Global Search' },
+  { id: 'jsonTreeViewer', label: 'JSON Tree Viewer' },
+  { id: 'modal', label: 'Modal' },
+  { id: 'routeTracker', label: 'Route Tracker' },
+  { id: 'routeProgress', label: 'Route Progress' },
+  { id: 'radio', label: 'Radio' },
+  { id: 'select', label: 'Select' },
+  { id: 'tabs', label: 'Tabs' },
+  { id: 'textField', label: 'Text Field' },
+  { id: 'toast', label: 'Toast' },
+]; 

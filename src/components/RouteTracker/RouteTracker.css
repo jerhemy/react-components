@@ -18,20 +18,25 @@
 .route-tracker-container {
   display: flex;
   justify-content: center;
+  align-items: center;
   width: 100%;
-  padding: 20px;
+  height: 100%;
   box-sizing: border-box;
+  position: relative;
+  overflow: visible;
 }
 
 .route-line {
   position: relative;
   width: 6px;
   background-color: #e0e0e0;
-  min-height: 300px;
+  min-height: 250px;
   height: 100%;
+  max-height: 360px; /* Adjusted to fit within the wrapper with padding */
   border-radius: 3px;
   margin: 0 auto;
   padding: 40px 0;
+  box-sizing: border-box;
 }
 
 /* The actual path/line */
@@ -90,6 +95,8 @@
   left: 50%;
   transform: translateX(-50%);
   z-index: 3;
+  display: flex;
+  align-items: center;
 }
 
 .stop-icon {
@@ -123,6 +130,8 @@
   left: 50%;
   transform: translateX(-50%);
   z-index: 4;
+  display: flex;
+  align-items: center;
 }
 
 .vehicle-icon {

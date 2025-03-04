@@ -69,11 +69,13 @@ const RouteTrackerDemo: React.FC = () => {
       description: 'A simple route tracker that displays the current route path.',
       preview: (
         <div className="route-demo-container">
-          <RouteTracker
-            currentDistance={basicDistance}
-            totalDistance={100}
-            stops={sampleStops}
-          />
+          <div className="route-tracker-wrapper">
+            <RouteTracker
+              currentDistance={basicDistance}
+              totalDistance={100}
+              stops={sampleStops}
+            />
+          </div>
           <div className="controls">
             <label>
               Current Distance: {basicDistance}km
@@ -106,11 +108,13 @@ const stops = [
 const MyComponent = () => {
   return (
     <>
-      <RouteTracker
-        currentDistance={currentDistance}
-        totalDistance={100}
-        stops={stops}
-      />
+      <div className="route-tracker-wrapper">
+        <RouteTracker
+          currentDistance={currentDistance}
+          totalDistance={100}
+          stops={stops}
+        />
+      </div>
       <input
         type="range"
         min="0"
@@ -127,12 +131,14 @@ const MyComponent = () => {
       description: 'Route tracker displaying the path from bottom to top.',
       preview: (
         <div className="route-demo-container">
-          <RouteTracker
-            currentDistance={bottomTopDistance}
-            totalDistance={100}
-            stops={sampleStops}
-            direction="bottom-to-top"
-          />
+          <div className="route-tracker-wrapper">
+            <RouteTracker
+              currentDistance={bottomTopDistance}
+              totalDistance={100}
+              stops={sampleStops}
+              direction="bottom-to-top"
+            />
+          </div>
           <div className="controls">
             <label>
               Current Distance: {bottomTopDistance}km
@@ -156,12 +162,14 @@ const [currentDistance, setCurrentDistance] = useState(35);
 const MyComponent = () => {
   return (
     <>
-      <RouteTracker
-        currentDistance={currentDistance}
-        totalDistance={100}
-        stops={stops}
-        direction="bottom-to-top"
-      />
+      <div className="route-tracker-wrapper">
+        <RouteTracker
+          currentDistance={currentDistance}
+          totalDistance={100}
+          stops={stops}
+          direction="bottom-to-top"
+        />
+      </div>
       <input
         type="range"
         min="0"
@@ -178,11 +186,13 @@ const MyComponent = () => {
       description: 'Route tracker showing a different current distance.',
       preview: (
         <div className="route-demo-container">
-          <RouteTracker
-            currentDistance={progressDistance}
-            totalDistance={100}
-            stops={sampleStops}
-          />
+          <div className="route-tracker-wrapper">
+            <RouteTracker
+              currentDistance={progressDistance}
+              totalDistance={100}
+              stops={sampleStops}
+            />
+          </div>
           <div className="controls">
             <label>
               Current Distance: {progressDistance}km
@@ -206,11 +216,13 @@ const [currentDistance, setCurrentDistance] = useState(75);
 const MyComponent = () => {
   return (
     <>
-      <RouteTracker
-        currentDistance={currentDistance}
-        totalDistance={100}
-        stops={stops}
-      />
+      <div className="route-tracker-wrapper">
+        <RouteTracker
+          currentDistance={currentDistance}
+          totalDistance={100}
+          stops={stops}
+        />
+      </div>
       <input
         type="range"
         min="0"
@@ -227,11 +239,13 @@ const MyComponent = () => {
       description: 'Route tracker with custom stop points.',
       preview: (
         <div className="route-demo-container">
-          <RouteTracker
-            currentDistance={customDistance}
-            totalDistance={50}
-            stops={customStops}
-          />
+          <div className="route-tracker-wrapper">
+            <RouteTracker
+              currentDistance={customDistance}
+              totalDistance={50}
+              stops={customStops}
+            />
+          </div>
           <div className="controls">
             <label>
               Current Distance: {customDistance}km
@@ -261,11 +275,13 @@ const customStops = [
 const MyComponent = () => {
   return (
     <>
-      <RouteTracker
-        currentDistance={currentDistance}
-        totalDistance={50}
-        stops={customStops}
-      />
+      <div className="route-tracker-wrapper">
+        <RouteTracker
+          currentDistance={currentDistance}
+          totalDistance={50}
+          stops={customStops}
+        />
+      </div>
       <input
         type="range"
         min="0"
