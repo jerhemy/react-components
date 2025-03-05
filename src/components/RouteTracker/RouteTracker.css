@@ -1,20 +1,42 @@
+:root {
+  /* Light theme colors */
+  --route-vehicle-bg: #f44336;
+  --route-vehicle-shadow: rgba(0, 0, 0, 0.2);
+  --route-info-text: #333;
+  --route-info-bg: #fff;
+  --route-info-shadow: rgba(0, 0, 0, 0.1);
+}
+
+[data-theme="dark"] {
+  --route-vehicle-bg: #ff5252;
+  --route-vehicle-shadow: rgba(0, 0, 0, 0.4);
+  --route-info-text: #e0e0e0;
+  --route-info-bg: #424242;
+  --route-info-shadow: rgba(0, 0, 0, 0.3);
+}
+
 .route-tracker-container {
   display: flex;
   justify-content: center;
+  align-items: center;
   width: 100%;
-  padding: 20px;
+  height: 100%;
   box-sizing: border-box;
+  position: relative;
+  overflow: visible;
 }
 
 .route-line {
   position: relative;
   width: 6px;
   background-color: #e0e0e0;
-  min-height: 300px;
+  min-height: 250px;
   height: 100%;
+  max-height: 360px; /* Adjusted to fit within the wrapper with padding */
   border-radius: 3px;
   margin: 0 auto;
   padding: 40px 0;
+  box-sizing: border-box;
 }
 
 /* The actual path/line */
@@ -73,6 +95,8 @@
   left: 50%;
   transform: translateX(-50%);
   z-index: 3;
+  display: flex;
+  align-items: center;
 }
 
 .stop-icon {
@@ -106,15 +130,17 @@
   left: 50%;
   transform: translateX(-50%);
   z-index: 4;
+  display: flex;
+  align-items: center;
 }
 
 .vehicle-icon {
   width: 20px;
   height: 20px;
-  background-color: #f44336;
+  background-color: var(--route-vehicle-bg);
   border-radius: 50%;
   margin: 0 auto;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 2px 4px var(--route-vehicle-shadow);
 }
 
 /* Direction-specific styles for vehicle info */
@@ -124,11 +150,11 @@
   right: 24px;
   font-size: 12px;
   font-weight: 500;
-  color: #333;
-  background-color: #fff;
+  color: var(--route-info-text);
+  background-color: var(--route-info-bg);
   padding: 2px 6px;
   border-radius: 4px;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 1px 3px var(--route-info-shadow);
 }
 
 .route-line.bottom-to-top .vehicle-info {
@@ -137,11 +163,11 @@
   left: 24px;
   font-size: 12px;
   font-weight: 500;
-  color: #333;
-  background-color: #fff;
+  color: var(--route-info-text);
+  background-color: var(--route-info-bg);
   padding: 2px 6px;
   border-radius: 4px;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 1px 3px var(--route-info-shadow);
 }
 
 /* Responsive adjustments */

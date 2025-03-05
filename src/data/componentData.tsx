@@ -1,15 +1,23 @@
-import React from 'react';
-import JsonTreeViewerDemo from '../components/JsonTreeViewerDemo';
 import DataGridDemo from '../components/DataGridDemo';
-import RouteTrackerDemo from '../components/RouteTrackerDemo';
+import FieldsetDemo from '../components/FieldsetDemo';
+import FormGroupDemo from '../pages/FormGroupDemo';
 import GlobalSearchDemo from '../components/GlobalSearchDemo';
+import JsonTreeViewerDemo from '../components/JsonTreeViewerDemo';
+import ModalDemo from '../components/ModalDemo';
+import React from 'react';
+import RouteTrackerDemo from '../components/RouteTrackerDemo';
+import RouteProgressDemo from '../pages/RouteProgressDemo';
 import SchedulerDemo from '../components/SchedulerDemo';
 import SelectDemo from '../components/SelectDemo';
-import FieldsetDemo from '../components/FieldsetDemo';
-import ModalDemo from '../components/ModalDemo';
 
 // Component categories for sidebar navigation
 export const componentCategories = {
+  gettingStarted: {
+    title: 'Getting Started',
+    items: [
+      { id: '', label: 'Get Started' }
+    ]
+  },
   form: {
     title: 'Form Components',
     items: [
@@ -19,6 +27,7 @@ export const componentCategories = {
       { id: 'select', label: 'Select' },
       { id: 'radio', label: 'Radio Button' },
       { id: 'icon', label: 'Icon' },
+      { id: 'formGroup', label: 'Form Group' }
     ]
   },
   data: {
@@ -27,6 +36,7 @@ export const componentCategories = {
       { id: 'dataGrid', label: 'Data Grid' },
       { id: 'jsonViewer', label: 'JSON Viewer' },
       { id: 'table', label: 'Table' },
+      { id: 'gauge', label: 'Gauge' }
     ]
   },
   layout: {
@@ -44,6 +54,7 @@ export const componentCategories = {
       { id: 'menu', label: 'Menu' },
       { id: 'breadcrumb', label: 'Breadcrumb' },
       { id: 'routeTracker', label: 'Route Tracker' },
+      { id: 'routeProgress', label: 'Route Progress' },
     ]
   },
   misc: {
@@ -642,4 +653,618 @@ function ModalExample() {
       },
     ],
   },
+  table: {
+    name: 'Table',
+    description: 'A modern, feature-rich table component with sorting, pagination, and responsive design. Supports custom cell rendering with React components, loading states, and automatic theme adaptation with proper contrast.',
+    codeExample: `import React from 'react';
+import Table, { Column } from './components/Table';
+
+interface User {
+  id: number;
+  name: string;
+  email: string;
+  role: string;
+  status: 'active' | 'inactive';
+  actions?: React.ReactNode;
+}
+
+// Custom component for the status badge with theme-aware colors
+const StatusBadge: React.FC<{ status: 'active' | 'inactive' }> = ({ status }) => (
+  <span style={{
+    padding: '0.25rem 0.5rem',
+    borderRadius: '9999px',
+    backgroundColor: status === 'active' ? 'var(--success-bg, #C6F6D5)' : 'var(--error-bg, #FED7D7)',
+    color: status === 'active' ? 'var(--success-text, #22543D)' : 'var(--error-text, #822727)'
+  }}>
+    {status}
+  </span>
+);
+
+// Custom component for action buttons with theme-aware styling
+const ActionButtons: React.FC<{ user: User }> = ({ user }) => (
+  <div className="action-buttons">
+    <button className="btn btn-secondary">Edit</button>
+    <button className="btn btn-danger">Delete</button>
+  </div>
+);
+
+const columns: Column<User>[] = [
+  { key: 'name', header: 'Name', sortable: true },
+  { key: 'email', header: 'Email', sortable: true },
+  { key: 'role', header: 'Role', sortable: true },
+  {
+    key: 'status',
+    header: 'Status',
+    sortable: true,
+    render: (value) => <StatusBadge status={value} />
+  },
+  {
+    key: 'actions',
+    header: 'Actions',
+    render: (_, row) => <ActionButtons user={row} />
+  }
+];
+
+function MyComponent() {
+  return (
+    <Table
+      data={users}
+      columns={columns}
+      pageSize={10}
+      onRowClick={(row) => console.log(row)}
+      hoverable
+      striped
+      theme="auto" // Will follow system preference
+      className="custom-table" // For custom theme overrides
+    />
+  );
+}`,
+    api: [
+      {
+        name: 'data',
+        type: 'T[]',
+        required: true,
+        description: 'Array of data items to display in the table'
+      },
+      {
+        name: 'columns',
+        type: 'Column<T>[]',
+        required: true,
+        description: 'Array of column definitions specifying how to display the data'
+      },
+      {
+        name: 'pageSize',
+        type: 'number',
+        default: '10',
+        description: 'Number of rows to display per page'
+      },
+      {
+        name: 'onRowClick',
+        type: '(row: T) => void',
+        description: 'Callback function called when a row is clicked'
+      },
+      {
+        name: 'emptyMessage',
+        type: 'string',
+        default: "'No data available'",
+        description: 'Message to display when there is no data'
+      },
+      {
+        name: 'loading',
+        type: 'boolean',
+        default: 'false',
+        description: 'Whether to show a loading state'
+      },
+      {
+        name: 'sortable',
+        type: 'boolean',
+        default: 'true',
+        description: 'Whether to enable column sorting'
+      },
+      {
+        name: 'className',
+        type: 'string',
+        description: 'Additional CSS class names to apply to the table container'
+      },
+      {
+        name: 'striped',
+        type: 'boolean',
+        default: 'true',
+        description: 'Whether to show alternating row colors'
+      },
+      {
+        name: 'hoverable',
+        type: 'boolean',
+        default: 'true',
+        description: 'Whether to show hover effects on rows'
+      },
+      {
+        name: 'compact',
+        type: 'boolean',
+        default: 'false',
+        description: 'Whether to use compact padding for cells'
+      },
+      {
+        name: 'columns[].render',
+        type: '(value: any, row: T) => React.ReactNode',
+        description: 'Function to render custom cell content. Receives the cell value and the entire row data. Can return any valid React node including custom components.'
+      },
+      {
+        name: 'theme',
+        type: "'light' | 'dark' | 'auto'",
+        default: "'auto'",
+        description: 'Theme mode for the table. Auto will follow system preferences.'
+      },
+      {
+        name: 'customColors',
+        type: 'object',
+        description: 'Override default theme colors for custom branding. See theme customization example.'
+      },
+    ],
+    features: [
+      'Sortable columns with ascending/descending order',
+      'Pagination with customizable page size',
+      'Custom cell rendering with React components',
+      'Full access to row data in custom renderers',
+      'Loading state with spinner',
+      'Empty state message',
+      'Row click handling',
+      'Responsive design with horizontal scrolling',
+      'Automatic theme detection and switching',
+      'High contrast color schemes for better readability',
+      'Customizable theme colors through CSS variables',
+      'Accessible color combinations for all states',
+    ],
+    usageExamples: [
+      {
+        title: 'Theme Customization',
+        description: 'Customizing table colors and contrast for both light and dark themes.',
+        code: `// Custom CSS variables for theming
+:root {
+  /* Light theme colors */
+  --table-bg: #ffffff;
+  --table-text: #1a202c;
+  --table-border: #e2e8f0;
+  --table-header-bg: #f7fafc;
+  --table-row-hover: #edf2f7;
+  --table-row-stripe: #f9fafb;
+}
+
+/* Dark theme colors */
+[data-theme="dark"] {
+  --table-bg: #1a202c;
+  --table-text: #ffffff;
+  --table-border: #2d3748;
+  --table-header-bg: #2d3748;
+  --table-row-hover: #2c3544;
+  --table-row-stripe: #1f2937;
+}
+
+<Table
+  data={users}
+  columns={columns}
+  theme="auto"
+  className="custom-themed-table"
+/>`
+      },
+      {
+        title: 'System Theme Integration',
+        description: 'Automatically switching between light and dark themes based on system preference.',
+        code: `<Table
+  data={users}
+  columns={columns}
+  theme="auto"
+  customColors={{
+    light: {
+      background: '#ffffff',
+      text: '#1a202c',
+      border: '#e2e8f0',
+      headerBackground: '#f7fafc',
+      rowHover: '#edf2f7',
+      rowStripe: '#f9fafb'
+    },
+    dark: {
+      background: '#1a202c',
+      text: '#ffffff',
+      border: '#2d3748',
+      headerBackground: '#2d3748',
+      rowHover: '#2c3544',
+      rowStripe: '#1f2937'
+    }
+  }}
+/>`
+      },
+      {
+        title: 'Custom Component Rendering',
+        description: 'Using custom React components for cell rendering with access to row data.',
+        code: `const CustomCell: React.FC<{ value: string; row: User }> = ({ value, row }) => (
+  <div className="custom-cell">
+    <span>{value}</span>
+    {row.isSpecial && <Icon name="star" color="gold" />}
+  </div>
+);
+
+<Table
+  data={users}
+  columns={[
+    { 
+      key: 'name', 
+      header: 'Name',
+      render: (value, row) => <CustomCell value={value} row={row} />
+    },
+    {
+      key: 'actions',
+      header: 'Actions',
+      render: (_, row) => (
+        <div className="action-buttons">
+          <Button onClick={() => handleEdit(row)}>Edit</Button>
+          <Button onClick={() => handleDelete(row)}>Delete</Button>
+        </div>
+      )
+    }
+  ]}
+/>`
+      },
+      {
+        title: 'Basic Table',
+        description: 'A simple table with sortable columns and pagination.',
+        code: `<Table
+  data={users}
+  columns={[
+    { key: 'name', header: 'Name', sortable: true },
+    { key: 'email', header: 'Email', sortable: true },
+    { key: 'role', header: 'Role', sortable: true }
+  ]}
+  pageSize={5}
+/>`
+      },
+      {
+        title: 'Custom Cell Rendering',
+        description: 'Using the render function to customize cell content.',
+        code: `<Table
+  data={users}
+  columns={[
+    { key: 'name', header: 'Name' },
+    {
+      key: 'status',
+      header: 'Status',
+      render: (value) => (
+        <span className={\`status-badge \${value}\`}>
+          {value}
+        </span>
+      )
+    }
+  ]}
+/>`
+      },
+      {
+        title: 'Interactive Table',
+        description: 'Table with row click handling and hover effects.',
+        code: `<Table
+  data={users}
+  columns={columns}
+  onRowClick={(row) => handleRowClick(row)}
+  hoverable
+  striped
+/>`
+      }
+    ]
+  },
+  formGroup: {
+    name: 'Form Group',
+    description: 'A powerful form management component that handles form state, validation, and submission.',
+    codeExample: `import { FormGroup, FormField } from '../components/FormGroup';
+
+const MyForm = () => {
+  const handleSubmit = (values) => {
+    console.log('Form submitted:', values);
+  };
+
+  const validateRequired = (value) => {
+    return !value ? 'This field is required' : undefined;
+  };
+
+  return (
+    <FormGroup
+      initialValues={{
+        name: '',
+        email: '',
+      }}
+      onSubmit={handleSubmit}
+    >
+      <FormField
+        name="name"
+        validate={validateRequired}
+      >
+        {({ value, onChange, onBlur, error, touched }) => (
+          <div className="form-field">
+            <label>Name</label>
+            <input
+              type="text"
+              value={value}
+              onChange={e => onChange(e.target.value)}
+              onBlur={onBlur}
+            />
+            {error && touched && <div className="error">{error}</div>}
+          </div>
+        )}
+      </FormField>
+    </FormGroup>
+  );
+};`,
+    api: [
+      { name: 'initialValues', type: 'Record<string, any>', description: 'Initial values for form fields' },
+      { name: 'onSubmit', type: '(values: Record<string, any>) => void', description: 'Callback fired when form is submitted' },
+      { name: 'onChange', type: '(values: Record<string, any>) => void', description: 'Callback fired when any field value changes' },
+      { name: 'className', type: 'string', description: 'Additional CSS class for the form element' }
+    ],
+    features: [
+      'Form state management using React Context',
+      'Field-level validation',
+      'Touch tracking for showing errors',
+      'Flexible input rendering with render props',
+      'TypeScript support'
+    ],
+    availableIcons: undefined,
+    usageExamples: undefined
+  },
+  radio: {
+    name: 'Radio',
+    description: 'A customizable radio button component that can be used independently or as part of a RadioGroup for managing related options. Supports different sizes, states, and orientations.',
+    codeExample: `import { Radio, RadioGroup } from 'your-component-library';
+
+// Individual radio button
+<Radio
+  label="Option 1"
+  value="1"
+  checked={selectedValue === '1'}
+  onChange={(e) => setSelectedValue(e.target.value)}
+  name="demo"
+/>
+
+// Radio group
+<RadioGroup
+  name="options"
+  value={selectedValue}
+  onChange={setSelectedValue}
+  orientation="vertical"
+>
+  <Radio label="Option 1" value="1" />
+  <Radio label="Option 2" value="2" />
+  <Radio label="Option 3" value="3" />
+</RadioGroup>`,
+    api: [
+      { name: 'label', type: 'ReactNode', description: 'The label to display next to the radio button' },
+      { name: 'value', type: 'string', description: 'The value associated with the radio button' },
+      { name: 'checked', type: 'boolean', description: 'Whether the radio button is checked' },
+      { name: 'onChange', type: '(e: ChangeEvent) => void', description: 'Callback when the radio button state changes' },
+      { name: 'name', type: 'string', description: 'The name attribute for the radio button' },
+      { name: 'error', type: 'boolean', default: 'false', description: 'Whether to show the error state' },
+      { name: 'size', type: "'sm' | 'md' | 'lg'", default: "'md'", description: 'The size of the radio button' },
+      { name: 'disabled', type: 'boolean', default: 'false', description: 'Whether the radio button is disabled' },
+      { name: 'className', type: 'string', description: 'Additional CSS class names' }
+    ],
+    features: [
+      'Customizable sizes (small, medium, large)',
+      'Support for error and disabled states',
+      'Accessible by default with keyboard navigation',
+      'Group management with RadioGroup component',
+      'Vertical and horizontal orientations',
+      'Consistent styling with design system',
+      'TypeScript support with proper type definitions'
+    ]
+  },
+  checkbox: {
+    name: 'Checkbox',
+    description: 'A customizable checkbox component with support for indeterminate state, different sizes, and various states. Perfect for single selections, multiple selections, and nested selection patterns.',
+    codeExample: `import { Checkbox } from 'your-component-library';
+
+// Basic usage
+<Checkbox
+  label="Accept terms"
+  checked={checked}
+  onChange={(e) => setChecked(e.target.checked)}
+/>
+
+// With indeterminate state
+<Checkbox
+  label="Select all"
+  checked={allChecked}
+  indeterminate={someChecked}
+  onChange={handleSelectAll}
+/>`,
+    api: [
+      { name: 'label', type: 'ReactNode', description: 'The label to display next to the checkbox' },
+      { name: 'checked', type: 'boolean', default: 'false', description: 'Whether the checkbox is checked' },
+      { name: 'indeterminate', type: 'boolean', default: 'false', description: 'Whether the checkbox is in an indeterminate state' },
+      { name: 'error', type: 'boolean', default: 'false', description: 'Whether to show the error state' },
+      { name: 'size', type: "'sm' | 'md' | 'lg'", default: "'md'", description: 'The size of the checkbox' },
+      { name: 'disabled', type: 'boolean', default: 'false', description: 'Whether the checkbox is disabled' },
+      { name: 'onChange', type: '(e: ChangeEvent) => void', description: 'Callback when the checkbox state changes' },
+      { name: 'className', type: 'string', description: 'Additional CSS class names' }
+    ],
+    features: [
+      'Support for indeterminate state',
+      'Three size variants (small, medium, large)',
+      'Error and disabled states',
+      'Accessible by default with keyboard navigation',
+      'Custom styling support',
+      'TypeScript support with proper type definitions',
+      'Controlled and uncontrolled usage'
+    ]
+  },
+  routeProgress: {
+    name: 'Route Progress',
+    description: 'A component for displaying route progress with stops and vehicle location tracking. Supports pre-route state, active stops, and distance indicators.',
+    codeExample: `import { RouteProgress } from 'your-component-library/RouteProgress';
+
+const stops = [
+  { id: '1', label: 'First Stop', isHome: true },
+  { id: '2', label: 'Second Stop' }
+];
+
+function MyComponent() {
+  return (
+    <RouteProgress 
+      stops={stops}
+      distanceToRoute={250} // Optional: distance in meters to route start
+    />
+  );
+}`,
+    api: [
+      {
+        name: 'stops',
+        type: 'RouteStop[]',
+        required: true,
+        description: 'Array of route stops to display'
+      },
+      {
+        name: 'distanceToRoute',
+        type: 'number | null',
+        description: 'Distance to the start of the route in meters. null/undefined means on route'
+      },
+      {
+        name: 'className',
+        type: 'string',
+        description: 'Additional CSS class names'
+      }
+    ],
+    features: [
+      'Visual route progress tracking',
+      'Support for pre-route state with distance indicator',
+      'Home stop indicator with icon',
+      'Active stop highlighting',
+      'Responsive design',
+      'Dark theme support',
+      'Animated vehicle location indicator'
+    ]
+  },
+  card: {
+    name: 'Card',
+    description: 'A versatile card component for displaying content in a contained, styled box.',
+    codeExample: `import { Card } from 'your-component-library/Card';
+
+function MyComponent() {
+  return (
+    <Card 
+      title="Card Title" 
+      subtitle="Card Subtitle"
+      elevation={1}
+      hoverable
+    >
+      <p>This is the card content.</p>
+    </Card>
+  );
+}`,
+    api: [
+      {
+        name: 'title',
+        type: 'ReactNode',
+        required: false,
+        description: 'Card title displayed in the header'
+      },
+      {
+        name: 'subtitle',
+        type: 'ReactNode',
+        required: false,
+        description: 'Card subtitle displayed below the title'
+      },
+      {
+        name: 'children',
+        type: 'ReactNode',
+        required: true,
+        description: 'Card content'
+      },
+      {
+        name: 'footer',
+        type: 'ReactNode',
+        required: false,
+        description: 'Optional footer content'
+      },
+      {
+        name: 'headerActions',
+        type: 'ReactNode',
+        required: false,
+        description: 'Optional actions displayed in the header'
+      },
+      {
+        name: 'imageUrl',
+        type: 'string',
+        required: false,
+        description: 'URL of an image to display at the top of the card'
+      },
+      {
+        name: 'imageAlt',
+        type: 'string',
+        required: false,
+        default: "''",
+        description: 'Alt text for the image'
+      },
+      {
+        name: 'elevation',
+        type: '0 | 1 | 2 | 3',
+        required: false,
+        default: '1',
+        description: 'Shadow elevation level'
+      },
+      {
+        name: 'hoverable',
+        type: 'boolean',
+        required: false,
+        default: 'false',
+        description: 'Whether the card has a hover effect'
+      },
+      {
+        name: 'bordered',
+        type: 'boolean',
+        required: false,
+        default: 'true',
+        description: 'Whether the card has a border'
+      },
+      {
+        name: 'onClick',
+        type: 'function',
+        required: false,
+        description: 'Click handler for the card'
+      },
+      {
+        name: 'className',
+        type: 'string',
+        required: false,
+        default: "''",
+        description: 'Additional CSS class names'
+      },
+      {
+        name: 'style',
+        type: 'CSSProperties',
+        required: false,
+        description: 'Inline styles for the card'
+      }
+    ],
+    features: [
+      'Multiple elevation levels for different shadow depths',
+      'Optional hover effect for interactive cards',
+      'Support for images, titles, subtitles, and footers',
+      'Customizable header actions',
+      'Responsive design that works on all screen sizes',
+      'Dark theme support'
+    ]
+  },
 }; 
+
+export const componentList = [
+  { id: 'button', label: 'Button' },
+  { id: 'card', label: 'Card' },
+  { id: 'checkbox', label: 'Checkbox' },
+  { id: 'dropdown', label: 'Dropdown' },
+  { id: 'globalSearch', label: 'Global Search' },
+  { id: 'jsonTreeViewer', label: 'JSON Tree Viewer' },
+  { id: 'modal', label: 'Modal' },
+  { id: 'routeTracker', label: 'Route Tracker' },
+  { id: 'routeProgress', label: 'Route Progress' },
+  { id: 'radio', label: 'Radio' },
+  { id: 'select', label: 'Select' },
+  { id: 'tabs', label: 'Tabs' },
+  { id: 'textField', label: 'Text Field' },
+  { id: 'toast', label: 'Toast' },
+]; 

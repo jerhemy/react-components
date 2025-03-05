@@ -5,6 +5,8 @@
   border-radius: 6px;
   margin-bottom: 1rem;
   padding: 0;
+  position: relative;
+  min-height: 2.5rem;
 }
 
 .fieldset-legend {
@@ -16,6 +18,8 @@
   width: auto;
   position: relative;
   margin-left: 1rem;
+  top: -0.75rem;
+  z-index: 1;
 }
 
 .fieldset-legend-text {
@@ -32,7 +36,6 @@
   font-weight: 600;
   font-size: 1rem;
   position: relative;
-  top: -0.75rem;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
 }
 
@@ -54,8 +57,8 @@
   font-size: 1rem;
   transition: background-color 0.2s, color 0.2s, box-shadow 0.2s;
   position: relative;
-  top: -0.75rem;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+  z-index: 2;
 }
 
 /* Remove border and styling from the legend text inside toggle button */
@@ -118,7 +121,11 @@
 
 .fieldset-content {
   padding: 1.25rem;
-  border-top: 1px solid #dee2e6;
+}
+
+.fieldset-collapsed {
+  min-height: 3rem;
+  padding-top: 0.5rem;
 }
 
 .fieldset-collapsed .fieldset-content {

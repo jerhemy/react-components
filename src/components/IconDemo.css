@@ -1,0 +1,277 @@
+.icon-demo {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 40px 20px;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+  background-color: var(--bg-color);
+  color: var(--text-color);
+}
+
+.icon-demo h2 {
+  text-align: center;
+  color: var(--heading-color);
+  margin-bottom: 30px;
+  font-size: 2rem;
+}
+
+.demo-info {
+  background-color: var(--hover-color);
+  border-radius: 8px;
+  padding: 24px;
+  border: 1px solid var(--border-color);
+  margin-bottom: 40px;
+}
+
+.demo-info h3 {
+  margin-top: 0;
+  color: var(--heading-color);
+  font-size: 1.5rem;
+  margin-bottom: 16px;
+}
+
+.demo-info p {
+  margin-bottom: 16px;
+  line-height: 1.6;
+  color: var(--text-color);
+  font-size: 1rem;
+}
+
+.demo-variation {
+  background-color: var(--bg-color);
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  margin-bottom: 40px;
+  overflow: hidden;
+}
+
+.demo-variation h3 {
+  margin: 0;
+  padding: 20px 24px;
+  background-color: var(--hover-color);
+  color: var(--heading-color);
+  font-size: 1.25rem;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.demo-variation p {
+  padding: 16px 24px;
+  margin: 0;
+  color: var(--text-color);
+  font-size: 1rem;
+  line-height: 1.5;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.demo-variation h4 {
+  margin: 0;
+  padding: 16px 24px;
+  color: var(--heading-color);
+  font-size: 1rem;
+  background-color: var(--hover-color);
+  border-bottom: 1px solid var(--border-color);
+}
+
+.demo-preview {
+  background-color: var(--bg-color);
+  border-bottom: 1px solid var(--border-color);
+}
+
+.preview-container {
+  padding: 24px;
+}
+
+.demo-code {
+  background-color: var(--bg-color);
+}
+
+.demo-code pre {
+  margin: 0;
+  padding: 24px;
+  background-color: var(--hover-color);
+  border-radius: 0;
+  font-size: 0.875rem;
+  line-height: 1.5;
+  overflow-x: auto;
+}
+
+.demo-code code {
+  font-family: 'Fira Code', monospace;
+}
+
+/* Icon specific styles */
+.icon-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+  gap: 16px;
+}
+
+.icon-row {
+  display: flex;
+  gap: 24px;
+  flex-wrap: wrap;
+}
+
+.icon-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  padding: 16px;
+  border: 1px solid var(--border-color);
+  border-radius: 4px;
+  background-color: var(--bg-color);
+  transition: all 0.2s;
+}
+
+.icon-item:hover {
+  background-color: var(--hover-color);
+}
+
+.icon-name {
+  font-size: 12px;
+  color: var(--secondary-text);
+}
+
+.icon-size {
+  font-size: 12px;
+  color: var(--secondary-text);
+  text-transform: uppercase;
+}
+
+.icon-color {
+  font-size: 12px;
+  color: var(--secondary-text);
+}
+
+.icon-playground {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.icon-controls {
+  display: flex;
+  gap: 24px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.icon-controls label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--text-color);
+}
+
+.icon-controls select,
+.icon-controls input {
+  padding: 4px 8px;
+  border: 1px solid var(--border-color);
+  border-radius: 4px;
+  background-color: var(--bg-color);
+  color: var(--text-color);
+  font-size: 14px;
+}
+
+.icon-controls select:focus,
+.icon-controls input:focus {
+  outline: none;
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 2px var(--primary-shadow);
+}
+
+.icon-preview {
+  display: flex;
+  gap: 24px;
+  flex-wrap: wrap;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .icon-demo {
+    padding: 20px 15px;
+  }
+  
+  .icon-demo h2 {
+    font-size: 1.5rem;
+  }
+  
+  .demo-info {
+    padding: 20px;
+  }
+  
+  .demo-variation h3 {
+    padding: 16px 20px;
+  }
+  
+  .demo-variation p,
+  .demo-variation h4,
+  .preview-container,
+  .demo-code pre {
+    padding: 16px 20px;
+  }
+  
+  .icon-grid {
+    grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+    gap: 12px;
+  }
+  
+  .icon-row {
+    gap: 16px;
+  }
+  
+  .icon-item {
+    padding: 12px;
+  }
+  
+  .icon-controls {
+    gap: 16px;
+  }
+}
+
+@media (max-width: 480px) {
+  .icon-demo h2 {
+    font-size: 1.25rem;
+  }
+  
+  .demo-info h3 {
+    font-size: 1.125rem;
+  }
+  
+  .demo-variation h3 {
+    font-size: 1rem;
+  }
+  
+  .demo-code pre {
+    font-size: 0.8125rem;
+  }
+  
+  .icon-grid {
+    grid-template-columns: repeat(auto-fill, minmax(70px, 1fr));
+    gap: 8px;
+  }
+  
+  .icon-row {
+    gap: 12px;
+  }
+  
+  .icon-item {
+    padding: 8px;
+  }
+  
+  .icon-name,
+  .icon-size,
+  .icon-color {
+    font-size: 11px;
+  }
+  
+  .icon-controls {
+    gap: 12px;
+    flex-direction: column;
+    align-items: stretch;
+  }
+  
+  .icon-controls label {
+    justify-content: space-between;
+  }
+} 

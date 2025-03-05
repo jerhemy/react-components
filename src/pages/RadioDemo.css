@@ -1,0 +1,139 @@
+.radio-demo {
+  padding: 2rem;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.radio-demo h2 {
+  margin-bottom: 2rem;
+  font-size: 2rem;
+  color: var(--text-primary);
+}
+
+.demo-info {
+  margin-bottom: 3rem;
+  padding: 1.5rem;
+  background-color: var(--background-secondary);
+  border-radius: 8px;
+}
+
+.demo-info h3 {
+  margin-bottom: 1rem;
+  color: var(--text-primary);
+}
+
+.demo-info p {
+  color: var(--text-secondary);
+  line-height: 1.6;
+}
+
+.demo-variation {
+  margin-bottom: 3rem;
+  padding: 2rem;
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+}
+
+.demo-variation h3 {
+  margin-bottom: 1rem;
+  color: var(--text-primary);
+}
+
+.demo-variation > p {
+  margin-bottom: 2rem;
+  color: var(--text-secondary);
+}
+
+.demo-preview {
+  margin-bottom: 2rem;
+  padding: 2rem;
+  background-color: var(--background-secondary);
+  border-radius: 8px;
+}
+
+.radio-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.demo-code {
+  background-color: var(--background-code);
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.demo-code h4 {
+  padding: 1rem;
+  margin: 0;
+  background-color: var(--background-code-header);
+  color: var(--text-primary);
+  font-size: 0.9rem;
+}
+
+.demo-code pre {
+  margin: 0;
+  padding: 1rem;
+  overflow-x: auto;
+}
+
+.demo-code code {
+  font-family: 'Fira Code', monospace;
+  font-size: 0.9rem;
+  color: var(--text-code);
+}
+
+.api-table {
+  margin-top: 2rem;
+}
+
+.api-table h4 {
+  margin-bottom: 1rem;
+  color: var(--text-primary);
+}
+
+.api-table table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 2rem;
+}
+
+.api-table th,
+.api-table td {
+  padding: 0.75rem;
+  text-align: left;
+  border: 1px solid var(--border-color);
+}
+
+.api-table th {
+  background-color: var(--background-secondary);
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.api-table td {
+  color: var(--text-secondary);
+}
+
+.api-table td:nth-child(2) {
+  font-family: 'Fira Code', monospace;
+  font-size: 0.9rem;
+}
+
+@media (max-width: 768px) {
+  .radio-demo {
+    padding: 1rem;
+  }
+
+  .demo-variation {
+    padding: 1rem;
+  }
+
+  .demo-preview {
+    padding: 1rem;
+  }
+
+  .api-table {
+    overflow-x: auto;
+  }
+} 

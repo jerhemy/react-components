@@ -74,7 +74,7 @@ export interface DataGridProps {
 
 // DataGrid component definition
 const DataGrid: React.FC<DataGridProps> = ({
-    columnDefs,
+    columnDefs = [],
     rowData = [],
     rowHeight = 40,
     headerHeight = 50,
@@ -98,11 +98,27 @@ const DataGrid: React.FC<DataGridProps> = ({
     const [columnWidths, setColumnWidths] = useState<{ [key: string]: number }>(() => {
         // Initialize column widths based on content length
         const initialWidths: { [key: string]: number } = {};
+
+        if (!columnDefs || !rowData) {
+            return initialWidths;
+        }
+
         columnDefs.forEach(column => {
-            const maxContentLength = Math.max(...rowData.map(row => String(row[column.field]).length));
-            const estimatedWidth = Math.min(Math.max(maxContentLength * 8, 50), 300); // Estimate width with min 50px and max 300px
-            initialWidths[column.field] = estimatedWidth;
+            if (column.width && typeof column.width === 'number') {
+                initialWidths[column.field] = column.width;
+            } else {
+                try {
+                    const maxContentLength = Math.max(
+                        column.headerName.length,
+                        ...rowData.map(row => String(row[column.field] || '').length)
+                    );
+                    initialWidths[column.field] = Math.min(Math.max(maxContentLength * 8, 100), 300);
+                } catch (e) {
+                    initialWidths[column.field] = 150; // Default width
+                }
+            }
         });
+
         return initialWidths;
     });
 
@@ -264,7 +280,7 @@ const DataGrid: React.FC<DataGridProps> = ({
                 <div className="data-grid-container" style={{ minWidth: allowHorizontalScroll ? 'fit-content' : 'auto' }}>
                     {/* Render header row */}
                     <div className="data-grid-header" style={{ height: headerHeight }}>
-                        {columnDefs.map((column) => (
+                        {(columnDefs || []).map((column) => (
                             <DataGridHeader
                                 key={column.field}
                                 column={column}

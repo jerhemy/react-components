@@ -1,51 +1,130 @@
 .input-demo {
-  padding: 1rem;
-  max-width: 600px;
+  max-width: 1200px;
   margin: 0 auto;
+  padding: 40px 20px;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+  background-color: var(--bg-color);
+  color: var(--text-color);
 }
 
-.input-demo-section {
-  margin-bottom: 2rem;
+.input-demo h2 {
+  text-align: center;
+  color: var(--heading-color);
+  margin-bottom: 30px;
+  font-size: 2rem;
 }
 
-.input-demo-section h3 {
-  margin-bottom: 1rem;
-  color: #212529;
-  font-size: 1.1rem;
+.demo-info {
+  background-color: var(--hover-color);
+  border-radius: 8px;
+  padding: 24px;
+  border: 1px solid var(--border-color);
+  margin-bottom: 40px;
 }
 
-.demo-input {
-  width: 100%;
-  padding: 0.5rem 0.75rem;
+.demo-info h3 {
+  margin-top: 0;
+  color: var(--heading-color);
+  font-size: 1.5rem;
+  margin-bottom: 16px;
+}
+
+.demo-info p {
+  margin-bottom: 16px;
+  line-height: 1.6;
+  color: var(--text-color);
+  font-size: 1rem;
+}
+
+.demo-variation {
+  background-color: var(--bg-color);
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  margin-bottom: 40px;
+  overflow: hidden;
+}
+
+.demo-variation h3 {
+  margin: 0;
+  padding: 20px 24px;
+  background-color: var(--hover-color);
+  color: var(--heading-color);
+  font-size: 1.25rem;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.demo-variation p {
+  padding: 16px 24px;
+  margin: 0;
+  color: var(--text-color);
   font-size: 1rem;
   line-height: 1.5;
-  color: #495057;
-  background-color: #fff;
-  border: 1px solid #ced4da;
-  border-radius: 0.25rem;
-  transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.demo-variation h4 {
+  margin: 0;
+  padding: 16px 24px;
+  color: var(--heading-color);
+  font-size: 1rem;
+  background-color: var(--hover-color);
+  border-bottom: 1px solid var(--border-color);
+}
+
+.demo-preview {
+  background-color: var(--bg-color);
+  border-bottom: 1px solid var(--border-color);
+}
+
+.preview-container {
+  padding: 24px;
+}
+
+.demo-code {
+  background-color: var(--bg-color);
+}
+
+.demo-code pre {
+  margin: 0;
+  padding: 24px;
+  background-color: var(--hover-color);
+  border-radius: 0;
+  font-size: 0.875rem;
+  line-height: 1.5;
+  overflow-x: auto;
+}
+
+.demo-code code {
+  font-family: 'Fira Code', monospace;
+}
+
+/* Input specific styles */
+.demo-input {
+  padding: 8px 12px;
+  border: 1px solid var(--border-color);
+  border-radius: 4px;
+  font-size: 14px;
+  line-height: 1.5;
+  color: var(--text-color);
+  background-color: var(--bg-color);
+  transition: all 0.2s;
+  width: 100%;
 }
 
 .demo-input:focus {
-  color: #495057;
-  background-color: #fff;
-  border-color: #80bdff;
-  outline: 0;
-  box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+  outline: none;
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 2px var(--primary-shadow);
 }
 
 .demo-input:disabled {
-  background-color: #e9ecef;
-  opacity: 0.65;
+  background-color: var(--hover-color);
   cursor: not-allowed;
+  opacity: 0.6;
 }
 
-.demo-checkbox {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  margin-top: 0.5rem;
-  color: #495057;
+.demo-input[readonly] {
+  background-color: var(--hover-color);
 }
 
 .input-with-icon {
@@ -54,12 +133,81 @@
   align-items: center;
 }
 
-.input-icon {
+.input-with-icon .input-icon {
   position: absolute;
-  left: 0.75rem;
-  color: #6c757d;
+  font-size: 16px;
+  color: var(--secondary-text);
+  padding: 0 12px;
+}
+
+.input-with-icon .input-icon:first-child + .demo-input {
+  padding-left: 36px;
+}
+
+.input-with-icon .input-icon:last-child {
+  right: 0;
 }
 
 .input-with-icon .demo-input {
-  padding-left: 2.5rem;
+  padding-right: 36px;
+}
+
+.input-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.input-value {
+  margin-top: 8px;
+  font-size: 14px;
+  color: var(--secondary-text);
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .input-demo {
+    padding: 20px 15px;
+  }
+  
+  .input-demo h2 {
+    font-size: 1.5rem;
+  }
+  
+  .demo-info {
+    padding: 20px;
+  }
+  
+  .demo-variation h3 {
+    padding: 16px 20px;
+  }
+  
+  .demo-variation p,
+  .demo-variation h4,
+  .preview-container,
+  .demo-code pre {
+    padding: 16px 20px;
+  }
+}
+
+@media (max-width: 480px) {
+  .input-demo h2 {
+    font-size: 1.25rem;
+  }
+  
+  .demo-info h3 {
+    font-size: 1.125rem;
+  }
+  
+  .demo-variation h3 {
+    font-size: 1rem;
+  }
+  
+  .demo-code pre {
+    font-size: 0.8125rem;
+  }
+  
+  .input-stack {
+    gap: 12px;
+  }
 } 

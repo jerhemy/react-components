@@ -1,0 +1,199 @@
+:root {
+  /* Light theme colors */
+  --json-tree-bg: #f8f8f8;
+  --json-tree-text: #333;
+  --json-tree-border: #ddd;
+  --json-tree-hover-bg: rgba(0, 0, 0, 0.05);
+  --json-tree-toggle-color: #666;
+  --json-tree-key-color: #881391;
+  --json-tree-summary-color: #666;
+  --json-tree-count-color: #999;
+  --json-tree-string-color: #1a1aa6;
+  --json-tree-number-color: #0b7500;
+  --json-tree-boolean-color: #1f00ce;
+  --json-tree-null-color: #808080;
+  --json-tree-children-border: #ccc;
+}
+
+[data-theme="dark"] {
+  --json-tree-bg: #1e1e1e;
+  --json-tree-text: #d4d4d4;
+  --json-tree-border: #444;
+  --json-tree-hover-bg: rgba(255, 255, 255, 0.05);
+  --json-tree-toggle-color: #999;
+  --json-tree-key-color: #c586c0;
+  --json-tree-summary-color: #999;
+  --json-tree-count-color: #777;
+  --json-tree-string-color: #ce9178;
+  --json-tree-number-color: #b5cea8;
+  --json-tree-boolean-color: #569cd6;
+  --json-tree-null-color: #999;
+  --json-tree-children-border: #444;
+}
+
+.json-tree-viewer {
+  font-family: monospace;
+  font-size: 14px;
+  line-height: 1.5;
+  color: var(--json-tree-text);
+  background-color: var(--json-tree-bg);
+  border: 1px solid var(--json-tree-border);
+  border-radius: 4px;
+  padding: 12px;
+  overflow: auto;
+  max-height: 600px;
+}
+
+.json-tree-node {
+  position: relative;
+  margin: 2px 0;
+}
+
+.json-tree-node-content {
+  display: flex;
+  align-items: flex-start;
+  padding: 2px 0;
+  cursor: default;
+  white-space: nowrap;
+}
+
+.json-tree-node-content.expandable {
+  cursor: pointer;
+}
+
+.json-tree-node-content.expandable:hover {
+  background-color: var(--json-tree-hover-bg);
+}
+
+.json-tree-toggle {
+  display: inline-block;
+  width: 16px;
+  text-align: center;
+  margin-right: 4px;
+}
+
+.json-tree-toggle-icon {
+  font-size: 10px;
+  color: var(--json-tree-toggle-color);
+}
+
+.json-tree-key {
+  color: var(--json-tree-key-color);
+  margin-right: 4px;
+  font-weight: bold;
+}
+
+.json-tree-summary {
+  color: var(--json-tree-summary-color);
+  font-style: italic;
+}
+
+.json-tree-count {
+  margin-left: 4px;
+  color: var(--json-tree-count-color);
+}
+
+.json-tree-value {
+  word-break: break-word;
+  white-space: pre-wrap;
+}
+
+.json-tree-value-string {
+  color: var(--json-tree-string-color);
+}
+
+.json-tree-value-number {
+  color: var(--json-tree-number-color);
+}
+
+.json-tree-value-boolean {
+  color: var(--json-tree-boolean-color);
+}
+
+.json-tree-value-null,
+.json-tree-value-undefined {
+  color: var(--json-tree-null-color);
+  font-style: italic;
+}
+
+/* Flash animation for updated values */
+@keyframes flash-highlight {
+  0% {
+    background-color: rgba(255, 255, 0, 0.9);
+    box-shadow: 0 0 8px rgba(255, 255, 0, 0.9);
+    transform: scale(1.05);
+  }
+  40% {
+    background-color: rgba(255, 255, 0, 0.7);
+    box-shadow: 0 0 6px rgba(255, 255, 0, 0.7);
+    transform: scale(1.03);
+  }
+  70% {
+    background-color: rgba(255, 255, 0, 0.4);
+    box-shadow: 0 0 4px rgba(255, 255, 0, 0.4);
+    transform: scale(1.01);
+  }
+  100% {
+    background-color: transparent;
+    box-shadow: none;
+    transform: scale(1);
+  }
+}
+
+.json-tree-value-flash {
+  animation: flash-highlight 1s ease-out;
+  border-radius: 2px;
+  padding: 0 2px;
+  margin: 0 -2px;
+}
+
+.json-tree-children {
+  padding-left: 20px;
+  border-left: 1px dotted var(--json-tree-children-border);
+  margin-left: 7px;
+}
+
+/* Animation for expanding/collapsing */
+.json-tree-children {
+  transition: height 0.2s ease-out;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .json-tree-viewer {
+    font-size: 12px;
+    padding: 8px;
+  }
+  
+  .json-tree-children {
+    padding-left: 12px;
+  }
+}
+
+/* Dark mode support */
+[data-theme="dark"] .json-tree-value-flash {
+  animation: flash-highlight-dark 1s ease-out;
+}
+
+@keyframes flash-highlight-dark {
+  0% {
+    background-color: rgba(255, 215, 0, 0.7);
+    box-shadow: 0 0 8px rgba(255, 215, 0, 0.7);
+    transform: scale(1.05);
+  }
+  40% {
+    background-color: rgba(255, 215, 0, 0.5);
+    box-shadow: 0 0 6px rgba(255, 215, 0, 0.5);
+    transform: scale(1.03);
+  }
+  70% {
+    background-color: rgba(255, 215, 0, 0.3);
+    box-shadow: 0 0 4px rgba(255, 215, 0, 0.3);
+    transform: scale(1.01);
+  }
+  100% {
+    background-color: transparent;
+    box-shadow: none;
+    transform: scale(1);
+  }
+} 
