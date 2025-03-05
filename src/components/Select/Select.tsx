@@ -1,6 +1,6 @@
 import './Select.css';
 
-import React, { useCallback, useEffect, useRef, useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 
 import Chip from './Chip';
 import { useDebounce } from '../../hooks/useDebounce';
@@ -46,7 +46,7 @@ export interface SelectProps<T = any> {
 }
 
 const isGroup = <T,>(option: SelectOption<T> | SelectGroup<T>): option is SelectGroup<T> => {
-    return 'options' in option;
+    return 'options' in option && Array.isArray(option.options);
 };
 
 const Select = <T extends Record<string, any> | string = any>({
@@ -71,41 +71,12 @@ const Select = <T extends Record<string, any> | string = any>({
 }: SelectProps<T>) => {
     const [isOpen, setIsOpen] = useState(false);
     const [searchTerm, setSearchTerm] = useState('');
-    const [loading, setLoading] = useState(false);
-    const [error, setError] = useState<string | null>(null);
-    const [searchResults, setSearchResults] = useState<(SelectOption<T> | SelectGroup<T>)[]>([]);
-    const [highlightedIndex, setHighlightedIndex] = useState<number>(-1);
+    const [searchResults, setSearchResults] = useState<SelectOption<T>[]>([]);
+    const [isLoading, setIsLoading] = useState(false);
     const containerRef = useRef<HTMLDivElement>(null);
     const inputRef = useRef<HTMLInputElement>(null);
-    const dropdownRef = useRef<HTMLDivElement>(null);
 
-    const handleSearch = useCallback(async (term: string) => {
-        if (!onSearch || term.length < minSearchLength) return;
-
-        setLoading(true);
-        setError(null);
-
-        try {
-            const results = await onSearch(term);
-            setSearchResults(results);
-        } catch (err) {
-            setError(errorText);
-            setSearchResults([]);
-        } finally {
-            setLoading(false);
-        }
-    }, [onSearch, minSearchLength, errorText]);
-
-    const debouncedSearch = useDebounce(handleSearch, 300);
-
-    useEffect(() => {
-        if (onSearch && searchTerm.length >= minSearchLength) {
-            debouncedSearch(searchTerm);
-        } else if (onSearch) {
-            setSearchResults([]);
-        }
-    }, [searchTerm, onSearch, minSearchLength, debouncedSearch]);
-
+    // Close dropdown when clicking outside
     useEffect(() => {
         const handleClickOutside = (event: MouseEvent) => {
             if (containerRef.current && !containerRef.current.contains(event.target as Node)) {
@@ -114,18 +85,47 @@ const Select = <T extends Record<string, any> | string = any>({
         };
 
         document.addEventListener('mousedown', handleClickOutside);
-        return () => document.removeEventListener('mousedown', handleClickOutside);
+        return () => {
+            document.removeEventListener('mousedown', handleClickOutside);
+        };
     }, []);
 
+    // Reset search when dropdown closes
     useEffect(() => {
         if (!isOpen) {
-            setHighlightedIndex(-1);
             setSearchTerm('');
-        } else if (inputRef.current) {
-            inputRef.current.focus();
+            setSearchResults([]);
+        } else if (isSearchable && inputRef.current) {
+            // Focus the search input when dropdown opens
+            setTimeout(() => {
+                inputRef.current?.focus();
+            }, 10);
         }
-    }, [isOpen]);
+    }, [isOpen, isSearchable]);
 
+    // Handle search input changes
+    const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const term = e.target.value;
+        setSearchTerm(term);
+
+        if (onSearch && term.length >= minSearchLength) {
+            setIsLoading(true);
+            onSearch(term)
+                .then(results => {
+                    const flatResults = results.flatMap(result =>
+                        isGroup(result) ? result.options : [result]
+                    );
+                    setSearchResults(flatResults);
+                    setIsLoading(false);
+                })
+                .catch(() => {
+                    setSearchResults([]);
+                    setIsLoading(false);
+                });
+        }
+    };
+
+    // Normalize options to SelectOption format
     const normalizeOption = (option: T | SelectOption<T>): SelectOption<T> => {
         if (typeof option === 'object' && option !== null) {
             if ('value' in option && 'label' in option) {
@@ -140,274 +140,255 @@ const Select = <T extends Record<string, any> | string = any>({
         return {
             value: String(option),
             label: String(option),
-            data: option as T
+            data: option
         };
     };
 
-    const normalizedOptions = options.map(option => {
-        if (isGroup(option as any)) {
-            return {
-                ...option,
-                options: (option as SelectGroup<T>).options.map(normalizeOption)
-            };
-        }
-        return normalizeOption(option as T);
-    }) as (SelectOption<T> | SelectGroup<T>)[];
-
+    // Get all options as a flat array (for selection checking)
     const getAllOptions = (): SelectOption<T>[] => {
-        const allOptions = onSearch ? searchResults : normalizedOptions;
-        return allOptions.reduce<SelectOption<T>[]>((acc, option) => {
-            if (isGroup(option)) {
-                return [...acc, ...option.options];
+        return options.flatMap(option => {
+            if (isGroup(option as any)) {
+                return (option as SelectGroup<T>).options;
             }
-            return [...acc, option];
-        }, []);
-    };
-
-    const getFilteredOptions = () => {
-        const optionsToFilter = onSearch ? searchResults : normalizedOptions;
-        if (!searchTerm || onSearch) return optionsToFilter;
-
-        const filterOption = (option: SelectOption<T>) =>
-            option.label.toLowerCase().includes(searchTerm.toLowerCase());
-
-        return optionsToFilter.map(option => {
-            if (isGroup(option)) {
-                return {
-                    ...option,
-                    options: option.options.filter(filterOption),
-                };
-            }
-            return option;
-        }).filter(option => {
-            if (isGroup(option)) {
-                return option.options.length > 0;
-            }
-            return filterOption(option as SelectOption<T>);
+            return normalizeOption(option as any);
         });
     };
 
+    // Check if an option is selected
     const isOptionSelected = (option: SelectOption<T>): boolean => {
+        if (!value) return false;
+
         if (isMulti && Array.isArray(value)) {
-            return value.some(v =>
-                typeof v === 'object'
-                    ? v[valueKey as keyof T] === option.data[valueKey as keyof T]
-                    : v === option.data
-            );
+            return value.some(v => {
+                const normalizedOption = normalizeOption(v);
+                return normalizedOption.value === option.value;
+            });
         }
-        if (value === null) return false;
-        return typeof value === 'object'
-            ? value[valueKey as keyof T] === option.data[valueKey as keyof T]
-            : value === option.data;
+
+        const normalizedValue = normalizeOption(value);
+        return normalizedValue.value === option.value;
     };
 
-    const handleSelect = (selectedOption: SelectOption<T>) => {
+    // Handle option selection
+    const handleSelect = (option: SelectOption<T>) => {
         if (isMulti) {
-            const newValue = Array.isArray(value) ? value : [];
-            const isSelected = isOptionSelected(selectedOption);
+            const newValue = Array.isArray(value) ? [...value] : [];
+            const isSelected = isOptionSelected(option);
 
             if (isSelected) {
-                onChange(newValue.filter(v =>
-                    typeof v === 'object'
-                        ? v[valueKey as keyof T] !== selectedOption.data[valueKey as keyof T]
-                        : v !== selectedOption.data
-                ));
+                onChange(newValue.filter(v => {
+                    const normalizedOption = normalizeOption(v);
+                    return normalizedOption.value !== option.value;
+                }));
             } else {
-                onChange([...newValue, selectedOption.data]);
+                onChange([...newValue, option.data || option]);
             }
         } else {
-            onChange(selectedOption.data);
+            onChange(option.data || option);
             setIsOpen(false);
         }
-        setSearchTerm('');
-        setSearchResults([]);
     };
 
-    const handleKeyDown = (event: React.KeyboardEvent) => {
-        if (!isOpen) {
-            if (event.key === 'Enter' || event.key === ' ' || event.key === 'ArrowDown') {
-                event.preventDefault();
-                setIsOpen(true);
-            }
-            return;
+    // Filter options based on search term
+    const getFilteredOptions = () => {
+        if (onSearch && searchTerm.length >= minSearchLength) {
+            return searchResults;
         }
 
-        const options = getAllOptions();
+        if (!searchTerm) return options;
 
-        switch (event.key) {
-            case 'ArrowDown':
-                event.preventDefault();
-                setHighlightedIndex(prev =>
-                    prev < options.length - 1 ? prev + 1 : 0
+        return options.map(option => {
+            if (isGroup(option as any)) {
+                const group = option as SelectGroup<T>;
+                const filteredOptions = group.options.filter(opt =>
+                    opt.label.toLowerCase().includes(searchTerm.toLowerCase())
                 );
-                break;
-            case 'ArrowUp':
-                event.preventDefault();
-                setHighlightedIndex(prev =>
-                    prev > 0 ? prev - 1 : options.length - 1
-                );
-                break;
-            case 'Enter':
-                event.preventDefault();
-                if (highlightedIndex >= 0) {
-                    handleSelect(options[highlightedIndex]);
+
+                if (filteredOptions.length > 0) {
+                    return {
+                        ...group,
+                        options: filteredOptions
+                    };
                 }
-                break;
-            case 'Escape':
-                event.preventDefault();
-                setIsOpen(false);
-                break;
-            case 'Tab':
-                setIsOpen(false);
-                break;
-        }
-    };
-
-    const renderSelectedValue = () => {
-        if (!value) return placeholder;
-
-        if (isMulti && Array.isArray(value)) {
-            if (value.length === 0) return placeholder;
-
-            if (useChips) {
-                return (
-                    <div className="select-chips" onClick={e => e.stopPropagation()}>
-                        {value.map((v, index) => {
-                            const label = typeof v === 'object'
-                                ? String(v[labelKey as keyof T])
-                                : String(v);
-                            return (
-                                <Chip
-                                    key={index}
-                                    label={label}
-                                    onRemove={() => {
-                                        const newValue = value.filter((_, i) => i !== index);
-                                        onChange(newValue.length > 0 ? newValue : null);
-                                    }}
-                                    disabled={disabled}
-                                />
-                            );
-                        })}
-                    </div>
-                );
+                return null;
             }
 
-            return value.map(v =>
-                typeof v === 'object'
-                    ? String(v[labelKey as keyof T])
-                    : String(v)
-            ).join(', ');
-        }
-
-        if (renderValue) {
-            return renderValue(value);
-        }
-
-        return typeof value === 'object'
-            ? String(value[labelKey as keyof T])
-            : String(value);
+            const normalizedOption = normalizeOption(option as any);
+            return normalizedOption.label.toLowerCase().includes(searchTerm.toLowerCase())
+                ? normalizedOption
+                : null;
+        }).filter(Boolean) as (SelectOption<T> | SelectGroup<T>)[];
     };
 
+    // Render the dropdown content
     const renderDropdownContent = () => {
-        if (loading) {
+        if (isLoading) {
             return <div className="select-message">{loadingText}</div>;
         }
 
-        if (error) {
-            return <div className="select-message error">{error}</div>;
-        }
-
         const filteredOptions = getFilteredOptions();
+
         if (filteredOptions.length === 0) {
             return <div className="select-message">{noOptionsText}</div>;
         }
 
-        let optionIndex = -1;
-
         return filteredOptions.map((option, index) => {
-            if (isGroup(option)) {
+            if (isGroup(option as any)) {
+                const group = option as SelectGroup<T>;
                 return (
-                    <div key={option.label} className="select-group">
-                        <div className="select-group-label">{option.label}</div>
-                        {option.options.map(groupOption => {
-                            optionIndex++;
-                            return (
+                    <div key={`group-${index}`} className="select-group">
+                        <div className="select-group-label">{group.label}</div>
+                        <div className="select-group-options">
+                            {group.options.map((groupOption) => (
                                 <div
                                     key={groupOption.value}
-                                    className={`select-option ${isOptionSelected(groupOption) ? 'selected' : ''
-                                        } ${optionIndex === highlightedIndex ? 'highlighted' : ''}`}
+                                    className={`select-option ${isOptionSelected(groupOption) ? 'selected' : ''}`}
                                     onClick={() => handleSelect(groupOption)}
-                                    onMouseEnter={() => setHighlightedIndex(optionIndex)}
                                 >
-                                    {isMulti && !useChips && (
-                                        <input
-                                            type="checkbox"
-                                            checked={isOptionSelected(groupOption)}
-                                            onChange={() => { }}
-                                            className="select-checkbox"
-                                        />
-                                    )}
-                                    {renderOption ? renderOption(groupOption.data) : groupOption.label}
+                                    {renderOption ? renderOption(groupOption.data as T) : groupOption.label}
                                 </div>
-                            );
-                        })}
+                            ))}
+                        </div>
                     </div>
                 );
             }
 
-            optionIndex++;
+            const normalizedOption = option as SelectOption<T>;
             return (
                 <div
-                    key={option.value}
-                    className={`select-option ${isOptionSelected(option as SelectOption<T>) ? 'selected' : ''
-                        } ${optionIndex === highlightedIndex ? 'highlighted' : ''}`}
-                    onClick={() => handleSelect(option as SelectOption<T>)}
-                    onMouseEnter={() => setHighlightedIndex(optionIndex)}
+                    key={normalizedOption.value}
+                    className={`select-option ${isOptionSelected(normalizedOption) ? 'selected' : ''}`}
+                    onClick={() => handleSelect(normalizedOption)}
                 >
-                    {isMulti && !useChips && (
-                        <input
-                            type="checkbox"
-                            checked={isOptionSelected(option as SelectOption<T>)}
-                            onChange={() => { }}
-                            className="select-checkbox"
-                        />
-                    )}
-                    {renderOption ? renderOption((option as SelectOption<T>).data) : (option as SelectOption<T>).label}
+                    {renderOption ? renderOption(normalizedOption.data as T) : normalizedOption.label}
                 </div>
             );
         });
     };
 
+    // Normalize a value to a SelectOption
+    const normalizeValue = (val: T | T[] | null): SelectOption<T> | SelectOption<T>[] | null => {
+        if (val === null) return null;
+
+        const allOptions = getAllOptions();
+
+        if (Array.isArray(val)) {
+            return val.map(v => {
+                if (typeof v === 'object' && v !== null && 'value' in v && 'label' in v) {
+                    return v as unknown as SelectOption<T>;
+                }
+
+                const matchingOption = allOptions.find(option =>
+                    String(option.value) === String(typeof v === 'object' ? (v as any)[valueKey] : v)
+                );
+
+                return matchingOption || {
+                    value: String(typeof v === 'object' ? (v as any)[valueKey] : v),
+                    label: String(typeof v === 'object' ? (v as any)[labelKey] : v),
+                    data: v
+                };
+            });
+        }
+
+        if (typeof val === 'object' && val !== null && 'value' in val && 'label' in val) {
+            return val as unknown as SelectOption<T>;
+        }
+
+        const matchingOption = allOptions.find(option =>
+            String(option.value) === String(typeof val === 'object' ? (val as any)[valueKey] : val)
+        );
+
+        return matchingOption || {
+            value: String(typeof val === 'object' ? (val as any)[valueKey] : val),
+            label: String(typeof val === 'object' ? (val as any)[labelKey] : val),
+            data: val
+        };
+    };
+
+    // Render the selected value
+    const renderSelectedValue = () => {
+        if (value === null || (Array.isArray(value) && value.length === 0)) {
+            return <div className="placeholder">{placeholder}</div>;
+        }
+
+        const normalizedValue = normalizeValue(value);
+
+        if (isMulti && Array.isArray(normalizedValue)) {
+            if (useChips) {
+                return (
+                    <div className="select-chips">
+                        {normalizedValue.map((option) => (
+                            <div key={option.value} className="chip">
+                                <span className="chip-label">
+                                    {renderValue ? renderValue(option.data as T) : option.label}
+                                </span>
+                                <button
+                                    type="button"
+                                    className="chip-remove"
+                                    onClick={(e) => {
+                                        e.stopPropagation();
+                                        const newValue = (value as T[]).filter(
+                                            (v) => String(typeof v === 'object' ? (v as any)[valueKey] : v) !== option.value
+                                        );
+                                        onChange(newValue.length ? newValue : null);
+                                    }}
+                                >
+                                    ×
+                                </button>
+                            </div>
+                        ))}
+                    </div>
+                );
+            }
+
+            return (
+                <div className="selected-value">
+                    {normalizedValue.map(option => option.label).join(', ')}
+                </div>
+            );
+        }
+
+        return (
+            <div className="selected-value">
+                {normalizedValue && !Array.isArray(normalizedValue) && (
+                    renderValue
+                        ? renderValue(normalizedValue.data as T)
+                        : normalizedValue.label
+                )}
+            </div>
+        );
+    };
+
     return (
         <div
+            className={`select-container ${className}`}
             ref={containerRef}
-            className={`select-container ${disabled ? 'disabled' : ''} ${className} ${useChips ? 'with-chips' : ''}`}
-            onKeyDown={handleKeyDown}
         >
             <div
-                className={`select-input ${isOpen ? 'open' : ''} ${loading ? 'loading' : ''}`}
+                className={`select-input ${isOpen ? 'is-open' : ''} ${disabled ? 'disabled' : ''} ${isSearchable ? 'searchable' : ''}`}
                 onClick={() => !disabled && setIsOpen(!isOpen)}
-                tabIndex={0}
             >
-                <div className="select-value">
-                    {renderSelectedValue()}
-                </div>
-                {isSearchable && isOpen && (
+                {renderSelectedValue()}
+
+                {isSearchable && (
                     <input
                         ref={inputRef}
                         type="text"
+                        className="select-search-input"
                         value={searchTerm}
-                        onChange={e => setSearchTerm(e.target.value)}
-                        onClick={e => e.stopPropagation()}
-                        className="select-search"
+                        onChange={handleSearchChange}
+                        onClick={(e) => e.stopPropagation()}
                         placeholder="Search..."
                     />
                 )}
-                <span className={`select-arrow ${isOpen ? 'open' : ''}`}>▼</span>
+
+                <div className="select-arrow">
+                    {isOpen ? '▲' : '▼'}
+                </div>
             </div>
 
             {isOpen && !disabled && (
-                <div ref={dropdownRef} className="select-dropdown">
+                <div className="select-dropdown">
                     {renderDropdownContent()}
                 </div>
             )}
@@ -415,4 +396,4 @@ const Select = <T extends Record<string, any> | string = any>({
     );
 };
 
-export default Select; 
+export default Select;
