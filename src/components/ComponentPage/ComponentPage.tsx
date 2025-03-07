@@ -19,6 +19,7 @@ import RouteProgressDemo from '../../pages/RouteProgressDemo';
 import RouteTrackerDemo from '../RouteTracker/RouteTrackerDemo';
 import SchedulerDemo from '../SchedulerDemo';
 import SelectDemo from '../../demo-pages/SelectDemo';
+import SliderDemo from '../../pages/SliderDemo';
 import TableDemo from '../Table/TableDemo';
 import { componentData } from '../../data/componentData';
 import { useParams } from 'react-router-dom';
@@ -83,6 +84,7 @@ const demoComponents: Record<string, React.ComponentType> = {
   routeTracker: RouteTrackerDemo,
   scheduler: SchedulerDemo,
   select: SelectDemo,
+  slider: SliderDemo,
   table: TableDemo,
 };
 

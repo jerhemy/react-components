@@ -12,6 +12,12 @@ interface JsonTreeViewerProps {
     initialExpandedDepth?: number;
     name?: string;
     isRoot?: boolean;
+    /** Enable flashing of changed values (default: true) */
+    enableFlash?: boolean;
+    /** Color for the flash highlight (default: '#ffff99') */
+    flashColor?: string;
+    /** Duration of the flash animation in milliseconds (default: 1000) */
+    flashDuration?: number;
 }
 
 interface JsonNodeProps {
@@ -20,10 +26,22 @@ interface JsonNodeProps {
     depth: number;
     initialExpandedDepth: number;
     path: string;
+    enableFlash: boolean;
+    flashColor: string;
+    flashDuration: number;
 }
 
 // Memoized JsonNode component to prevent unnecessary re-renders
-const JsonNode = memo(({ name, value, depth, initialExpandedDepth, path }: JsonNodeProps) => {
+const JsonNode = memo(({
+    name,
+    value,
+    depth,
+    initialExpandedDepth,
+    path,
+    enableFlash,
+    flashColor,
+    flashDuration
+}: JsonNodeProps) => {
     // State to track if this node is expanded
     const [isExpanded, setIsExpanded] = useState(depth < initialExpandedDepth);
 
@@ -62,6 +80,12 @@ const JsonNode = memo(({ name, value, depth, initialExpandedDepth, path }: JsonN
 
     // Check if value has changed and trigger flash animation
     useEffect(() => {
+        // Skip if flashing is disabled
+        if (!enableFlash) {
+            prevValueRef.current = value;
+            return;
+        }
+
         // Skip for expandable values (objects/arrays) - we'll flash their children instead
         if (isExpandable) {
             prevValueRef.current = value;
@@ -92,14 +116,14 @@ const JsonNode = memo(({ name, value, depth, initialExpandedDepth, path }: JsonN
                     timerRef.current = window.setTimeout(() => {
                         setShouldFlash(false);
                         timerRef.current = null;
-                    }, 1000); // Match this with CSS animation duration
+                    }, flashDuration); // Use the configurable duration
                 });
             });
 
             // Update ref with current value
             prevValueRef.current = value;
         }
-    }, [value, isExpandable]);
+    }, [value, isExpandable, enableFlash, flashDuration]);
 
     // Clean up timer on unmount
     useEffect(() => {
@@ -109,6 +133,9 @@ const JsonNode = memo(({ name, value, depth, initialExpandedDepth, path }: JsonN
             }
         };
     }, []);
+
+    // Generate inline style for flash animation if custom color is provided
+    const flashStyle = shouldFlash && enableFlash ? { backgroundColor: flashColor } : undefined;
 
     // Render the node
     return (
@@ -140,7 +167,10 @@ const JsonNode = memo(({ name, value, depth, initialExpandedDepth, path }: JsonN
                         <span className="json-tree-count">({childCount})</span>
                     </span>
                 ) : (
-                    <span className={`json-tree-value json-tree-value-${valueType} ${shouldFlash ? 'json-tree-value-flash' : ''}`}>
+                    <span
+                        className={`json-tree-value json-tree-value-${valueType} ${shouldFlash && enableFlash ? 'json-tree-value-flash' : ''}`}
+                        style={flashStyle}
+                    >
                         {getDisplayValue(value)}
                     </span>
                 )}
@@ -157,6 +187,9 @@ const JsonNode = memo(({ name, value, depth, initialExpandedDepth, path }: JsonN
                             depth={depth + 1}
                             initialExpandedDepth={initialExpandedDepth}
                             path={`${path}.${key}`}
+                            enableFlash={enableFlash}
+                            flashColor={flashColor}
+                            flashDuration={flashDuration}
                         />
                     ))}
                 </div>
@@ -170,7 +203,10 @@ const JsonTreeViewer: React.FC<JsonTreeViewerProps> = ({
     data,
     initialExpandedDepth = 1,
     name = null,
-    isRoot = true
+    isRoot = true,
+    enableFlash = true,
+    flashColor = '#ffff99',
+    flashDuration = 1000
 }) => {
     // Generate a stable key for the root node
     const rootKey = useMemo(() => 'root', []);
@@ -183,6 +219,9 @@ const JsonTreeViewer: React.FC<JsonTreeViewerProps> = ({
                 depth={0}
                 initialExpandedDepth={initialExpandedDepth}
                 path={rootKey}
+                enableFlash={enableFlash}
+                flashColor={flashColor}
+                flashDuration={flashDuration}
             />
         </div>
     );

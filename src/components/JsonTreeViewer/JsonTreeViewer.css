@@ -116,36 +116,24 @@
   font-style: italic;
 }
 
-/* Flash animation for updated values */
-@keyframes flash-highlight {
+/* Add or update the flash animation styles */
+.json-tree-value-flash {
+  animation: flash-animation 1s ease-in-out;
+}
+
+@keyframes flash-animation {
   0% {
-    background-color: rgba(255, 255, 0, 0.9);
-    box-shadow: 0 0 8px rgba(255, 255, 0, 0.9);
-    transform: scale(1.05);
+    background-color: transparent;
   }
-  40% {
-    background-color: rgba(255, 255, 0, 0.7);
-    box-shadow: 0 0 6px rgba(255, 255, 0, 0.7);
-    transform: scale(1.03);
-  }
-  70% {
-    background-color: rgba(255, 255, 0, 0.4);
-    box-shadow: 0 0 4px rgba(255, 255, 0, 0.4);
-    transform: scale(1.01);
+  20% {
+    background-color: inherit; /* Will be overridden by inline style */
   }
   100% {
     background-color: transparent;
-    box-shadow: none;
-    transform: scale(1);
   }
 }
 
-.json-tree-value-flash {
-  animation: flash-highlight 1s ease-out;
-  border-radius: 2px;
-  padding: 0 2px;
-  margin: 0 -2px;
-}
+/* Remove any theme-specific flash colors since we're using inline styles now */
 
 .json-tree-children {
   padding-left: 20px;

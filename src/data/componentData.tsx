@@ -10,6 +10,7 @@ import RouteProgressDemo from '../pages/RouteProgressDemo';
 import RouteTrackerDemo from '../components/RouteTrackerDemo';
 import SchedulerDemo from '../components/SchedulerDemo';
 import SelectDemo from '../components/SelectDemo';
+import SliderDemo from '../pages/SliderDemo';
 
 // Component categories for sidebar navigation
 export const componentCategories = {
@@ -27,6 +28,7 @@ export const componentCategories = {
       { id: 'checkbox', label: 'Checkbox' },
       { id: 'select', label: 'Select' },
       { id: 'radio', label: 'Radio Button' },
+      { id: 'slider', label: 'Slider' },
       { id: 'icon', label: 'Icon' },
       { id: 'formGroup', label: 'Form Group' }
     ]
@@ -1358,6 +1360,144 @@ const MyComponent = () => {
   barColor="#10b981"
 />
 `
+      }
+    ]
+  },
+  slider: {
+    name: 'Slider',
+    description: 'A versatile slider component with support for constrained ranges and multiple values.',
+    codeExample: `
+import Slider from '../components/Slider';
+import { useState } from 'react';
+
+const MyComponent = () => {
+  const [value, setValue] = useState(50);
+  
+  return (
+    <Slider
+      value={value}
+      onChange={(value) => setValue(value as number)}
+      min={0}
+      max={100}
+      constrainedMin={20}
+      constrainedMax={80}
+      showTicks={true}
+    />
+  );
+};
+`,
+    api: [
+      { name: 'value', type: 'number | [number, number] | number[]', required: true, description: 'Current value(s) of the slider' },
+      { name: 'onChange', type: '(value: SliderValue) => void', required: true, description: 'Handler for value changes' },
+      { name: 'min', type: 'number', default: '0', description: 'Minimum possible value' },
+      { name: 'max', type: 'number', default: '100', description: 'Maximum possible value' },
+      { name: 'step', type: 'number', default: '1', description: 'Step size for value changes' },
+      { name: 'constrainedMin', type: 'number', default: 'Same as min', description: 'Constrained minimum value - user cannot select below this' },
+      { name: 'constrainedMax', type: 'number', default: 'Same as max', description: 'Constrained maximum value - user cannot select above this' },
+      { name: 'multiple', type: 'boolean', default: 'false', description: 'Whether to allow multiple values' },
+      { name: 'maxValues', type: 'number', description: 'Maximum number of values when multiple is true' },
+      { name: 'disabled', type: 'boolean', default: 'false', description: 'Whether the slider is disabled' },
+      { name: 'valueFormatter', type: '(value: number) => string', default: 'value => value.toString()', description: 'Custom formatter for the displayed values' },
+      { name: 'showLabels', type: 'boolean', default: 'true', description: 'Whether to show value labels' },
+      { name: 'showTicks', type: 'boolean', default: 'false', description: 'Whether to show tick marks' },
+      { name: 'tickCount', type: 'number', default: '5', description: 'Number of tick marks to show' },
+      { name: 'className', type: 'string', default: "''", description: 'Custom class name' },
+      { name: 'showTooltip', type: 'boolean', default: 'true', description: 'Whether to show tooltip on hover/drag' },
+      { name: 'orientation', type: "'horizontal' | 'vertical'", default: "'horizontal'", description: 'Orientation of the slider' },
+      { name: 'height', type: 'string | number', default: '200', description: 'Height for vertical slider' }
+    ],
+    features: [
+      'Single value selection',
+      'Range selection (min/max)',
+      'Multiple value selection',
+      'Constrained ranges (disabled sections)',
+      'Customizable appearance with CSS variables',
+      'Vertical and horizontal orientations',
+      'Tooltips for value display',
+      'Tick marks for value reference',
+      'Accessibility support',
+      'Responsive design'
+    ],
+    usageExamples: [
+      {
+        title: 'Basic Slider',
+        description: 'A simple slider with a single value.',
+        code: `
+import Slider from '../components/Slider';
+import { useState } from 'react';
+
+const MyComponent = () => {
+  const [value, setValue] = useState(50);
+  
+  return (
+    <Slider
+      value={value}
+      onChange={(value) => setValue(value as number)}
+      showTicks={true}
+    />
+  );
+};`
+      },
+      {
+        title: 'Constrained Range Slider',
+        description: 'A slider with constrained minimum and maximum values.',
+        code: `
+import Slider from '../components/Slider';
+import { useState } from 'react';
+
+const MyComponent = () => {
+  const [value, setValue] = useState(50);
+  
+  return (
+    <Slider
+      value={value}
+      onChange={(value) => setValue(value as number)}
+      min={0}
+      max={100}
+      constrainedMin={20}
+      constrainedMax={80}
+      showTicks={true}
+    />
+  );
+};`
+      },
+      {
+        title: 'Range Slider',
+        description: 'A slider that allows selecting a range between two values.',
+        code: `
+import Slider from '../components/Slider';
+import { useState } from 'react';
+
+const MyComponent = () => {
+  const [rangeValue, setRangeValue] = useState<[number, number]>([30, 70]);
+  
+  return (
+    <Slider
+      value={rangeValue}
+      onChange={(value) => setRangeValue(value as [number, number])}
+    />
+  );
+};`
+      },
+      {
+        title: 'Multiple Values Slider',
+        description: 'A slider that allows selecting multiple discrete values.',
+        code: `
+import Slider from '../components/Slider';
+import { useState } from 'react';
+
+const MyComponent = () => {
+  const [multipleValues, setMultipleValues] = useState<number[]>([25, 50, 75]);
+  
+  return (
+    <Slider
+      value={multipleValues}
+      onChange={(value) => setMultipleValues(value as number[])}
+      multiple={true}
+      maxValues={5}
+    />
+  );
+};`
       }
     ]
   },

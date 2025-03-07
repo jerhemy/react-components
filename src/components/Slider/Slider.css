@@ -1,0 +1,289 @@
+/**
+ * Slider.css
+ * 
+ * Styles for the Slider component
+ */
+
+:root {
+  --slider-primary-color: #4f46e5;
+  --slider-secondary-color: #818cf8;
+  --slider-disabled-color: #d1d5db;
+  --slider-track-color: #e5e7eb;
+  --slider-constrained-color: #f3f4f6;
+  --slider-thumb-size: 16px;
+  --slider-track-height: 6px;
+  --slider-tooltip-bg: #1f2937;
+  --slider-tooltip-text: #ffffff;
+  --slider-tick-size: 2px;
+  --slider-tick-height: 8px;
+}
+
+/* Base slider styles */
+.slider {
+  position: relative;
+  width: 100%;
+  margin: 20px 0;
+  padding: 10px 0;
+  box-sizing: border-box;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+}
+
+/* Vertical orientation */
+.slider.vertical {
+  height: var(--slider-height);
+  width: 60px;
+  margin: 0 20px;
+  padding: 0 10px;
+}
+
+/* Disabled state */
+.slider.disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+/* Labels */
+.slider-labels {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 10px;
+  font-size: 12px;
+  color: #6b7280;
+}
+
+.slider.vertical .slider-labels {
+  flex-direction: column-reverse;
+  height: 100%;
+  margin-bottom: 0;
+  margin-right: 10px;
+  position: absolute;
+  right: 100%;
+  top: 0;
+}
+
+/* Track */
+.slider-track {
+  position: relative;
+  height: var(--slider-track-height);
+  background-color: var(--slider-track-color);
+  border-radius: 3px;
+  cursor: pointer;
+}
+
+.slider.vertical .slider-track {
+  width: var(--slider-track-height);
+  height: 100%;
+  margin: 0 auto;
+}
+
+/* Constrained track sections */
+.slider-track-constrained-min {
+  position: absolute;
+  left: 0;
+  top: 0;
+  height: 100%;
+  width: var(--slider-constrained-min);
+  background-color: var(--slider-constrained-color);
+  border-radius: 3px 0 0 3px;
+  pointer-events: none;
+}
+
+.slider-track-constrained-max {
+  position: absolute;
+  right: 0;
+  top: 0;
+  height: 100%;
+  width: calc(100% - var(--slider-constrained-max));
+  background-color: var(--slider-constrained-color);
+  border-radius: 0 3px 3px 0;
+  pointer-events: none;
+}
+
+.slider.vertical .slider-track-constrained-min {
+  top: auto;
+  bottom: 0;
+  width: 100%;
+  height: var(--slider-constrained-min);
+  border-radius: 0 0 3px 3px;
+}
+
+.slider.vertical .slider-track-constrained-max {
+  right: auto;
+  top: 0;
+  width: 100%;
+  height: calc(100% - var(--slider-constrained-max));
+  border-radius: 3px 3px 0 0;
+}
+
+/* Active range for range slider */
+.slider-track-active {
+  position: absolute;
+  left: var(--slider-value-0);
+  right: calc(100% - var(--slider-value-1));
+  top: 0;
+  height: 100%;
+  background-color: var(--slider-primary-color);
+  border-radius: 3px;
+  pointer-events: none;
+}
+
+.slider.vertical .slider-track-active {
+  left: 0;
+  bottom: var(--slider-value-0);
+  top: calc(100% - var(--slider-value-1));
+  width: 100%;
+  height: auto;
+}
+
+/* Thumb */
+.slider-thumb {
+  position: absolute;
+  top: 50%;
+  width: var(--slider-thumb-size);
+  height: var(--slider-thumb-size);
+  background-color: var(--slider-primary-color);
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  cursor: grab;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  transition: transform 0.1s ease, box-shadow 0.1s ease;
+  z-index: 2;
+}
+
+.slider.vertical .slider-thumb {
+  left: 50%;
+  top: auto;
+  transform: translate(-50%, 50%);
+}
+
+.slider-thumb.active {
+  transform: translate(-50%, -50%) scale(1.1);
+  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.15);
+  cursor: grabbing;
+  z-index: 3;
+}
+
+.slider.vertical .slider-thumb.active {
+  transform: translate(-50%, 50%) scale(1.1);
+}
+
+.slider-thumb.disabled {
+  background-color: var(--slider-disabled-color);
+  cursor: not-allowed;
+}
+
+/* Tooltip */
+.slider-tooltip,
+.slider-hover-tooltip {
+  position: absolute;
+  bottom: 100%;
+  left: 50%;
+  transform: translateX(-50%) translateY(-8px);
+  background-color: var(--slider-tooltip-bg);
+  color: var(--slider-tooltip-text);
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 12px;
+  white-space: nowrap;
+  pointer-events: none;
+  z-index: 10;
+  opacity: 0;
+  transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+.slider-thumb.active .slider-tooltip,
+.slider-hover-tooltip {
+  opacity: 1;
+  transform: translateX(-50%) translateY(-4px);
+}
+
+.slider.vertical .slider-tooltip,
+.slider.vertical .slider-hover-tooltip {
+  bottom: auto;
+  left: auto;
+  right: 100%;
+  top: 50%;
+  transform: translateX(-8px) translateY(-50%);
+}
+
+.slider.vertical .slider-thumb.active .slider-tooltip,
+.slider.vertical .slider-hover-tooltip {
+  transform: translateX(-4px) translateY(-50%);
+}
+
+/* Tooltip arrow */
+.slider-tooltip::after,
+.slider-hover-tooltip::after {
+  content: '';
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  border-width: 4px;
+  border-style: solid;
+  border-color: var(--slider-tooltip-bg) transparent transparent transparent;
+}
+
+.slider.vertical .slider-tooltip::after,
+.slider.vertical .slider-hover-tooltip::after {
+  top: 50%;
+  left: 100%;
+  transform: translateY(-50%);
+  border-color: transparent transparent transparent var(--slider-tooltip-bg);
+}
+
+/* Tick marks */
+.slider-tick {
+  position: absolute;
+  top: 50%;
+  width: var(--slider-tick-size);
+  height: var(--slider-tick-height);
+  background-color: var(--slider-secondary-color);
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+}
+
+.slider.vertical .slider-tick {
+  top: auto;
+  left: 50%;
+  width: var(--slider-tick-height);
+  height: var(--slider-tick-size);
+  transform: translate(-50%, 50%);
+}
+
+.slider-tick.disabled {
+  background-color: var(--slider-disabled-color);
+}
+
+/* Dark mode support */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --slider-primary-color: #6366f1;
+    --slider-secondary-color: #818cf8;
+    --slider-disabled-color: #4b5563;
+    --slider-track-color: #374151;
+    --slider-constrained-color: #1f2937;
+    --slider-tooltip-bg: #111827;
+    --slider-tooltip-text: #f9fafb;
+  }
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .slider {
+    margin: 15px 0;
+  }
+  
+  .slider.vertical {
+    height: 150px;
+  }
+  
+  .slider-labels {
+    font-size: 10px;
+  }
+  
+  :root {
+    --slider-thumb-size: 14px;
+    --slider-track-height: 4px;
+  }
+} 

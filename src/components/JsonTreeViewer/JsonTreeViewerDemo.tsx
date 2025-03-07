@@ -1,10 +1,12 @@
 import './JsonTreeViewerDemo.css';
 
+import React, { useCallback, useEffect, useState } from 'react';
+
 import CodeBlock from '../CodeBlock/CodeBlock';
 import JsonTreeViewer from './JsonTreeViewer';
-import React from 'react';
 
-const sampleJson = {
+// Sample JSON data
+const initialSampleJson = {
   name: 'John Doe',
   age: 30,
   address: {
@@ -25,6 +27,7 @@ const sampleJson = {
   },
 };
 
+// Sample nested JSON data
 const nestedJson = {
   id: 1,
   type: 'root',
@@ -48,7 +51,7 @@ const nestedJson = {
             {
               id: 5,
               type: 'file',
-              name: 'project1.doc',
+              name: 'project1.docx',
               size: '1.2MB',
             },
           ],
@@ -64,212 +67,224 @@ const nestedJson = {
           id: 7,
           type: 'file',
           name: 'vacation.jpg',
-          size: '3.8MB',
+          size: '3.1MB',
         },
       ],
     },
   ],
-};
+} as any; // Cast to any to avoid type errors with the JsonValue type
 
+// Demo component for JsonTreeViewer
 const JsonTreeViewerDemo: React.FC = () => {
-  const variations = [
-    {
-      title: 'Basic JSON Tree Viewer',
-      description: 'A simple tree viewer for JSON data with collapsible nodes.',
-      preview: (
-        <JsonTreeViewer data={sampleJson} />
-      ),
-      code: `import { JsonTreeViewer } from './JsonTreeViewer';
+  // State for the sample JSON data that will be updated
+  const [sampleJson, setSampleJson] = useState(initialSampleJson);
 
+  // State for flash configuration
+  const [enableFlash, setEnableFlash] = useState(true);
+  const [flashColor, setFlashColor] = useState('#ffff99');
+  const [flashDuration, setFlashDuration] = useState(1000);
+
+  // Function to update random values in the JSON
+  const updateRandomValues = useCallback(() => {
+    setSampleJson(prevJson => {
+      // Create a deep copy of the previous JSON
+      const newJson = JSON.parse(JSON.stringify(prevJson));
+
+      // Update some random values
+      newJson.age = Math.floor(Math.random() * 50) + 20; // Random age between 20-70
+      newJson.address.city = ['New York', 'Los Angeles', 'Chicago', 'Houston', 'Phoenix'][Math.floor(Math.random() * 5)];
+      newJson.contacts[0].value = `john${Math.floor(Math.random() * 100)}@example.com`;
+      newJson.preferences.notifications.push = !newJson.preferences.notifications.push;
+
+      return newJson;
+    });
+  }, []);
+
+  // Auto-update the JSON every 5 seconds for demonstration
+  useEffect(() => {
+    const intervalId = setInterval(() => {
+      if (document.visibilityState === 'visible') {
+        updateRandomValues();
+      }
+    }, 5000);
+
+    return () => clearInterval(intervalId);
+  }, [updateRandomValues]);
+
+  return (
+    <div className="json-tree-viewer-demo">
+      <h1>JSON Tree Viewer</h1>
+
+      <section className="demo-section">
+        <h2>Overview</h2>
+        <p>
+          The JsonTreeViewer component provides an interactive tree view for JSON data.
+          It supports collapsible nodes, syntax highlighting, and now features highlighting
+          of changed values when data is updated.
+        </p>
+      </section>
+
+      <section className="demo-section">
+        <h2>Basic Example with Change Highlighting</h2>
+        <p>
+          This example demonstrates the JSON Tree Viewer with change highlighting.
+          Values that change will flash with the specified color and duration.
+          The data updates automatically every 5 seconds, or you can click the button to update it manually.
+        </p>
+
+        <div className="flash-controls">
+          <div className="control-group">
+            <label>
+              <input
+                type="checkbox"
+                checked={enableFlash}
+                onChange={(e) => setEnableFlash(e.target.checked)}
+              />
+              Enable Flash Highlighting
+            </label>
+          </div>
+
+          <div className="control-group">
+            <label>Flash Color:</label>
+            <input
+              type="color"
+              value={flashColor}
+              onChange={(e) => setFlashColor(e.target.value)}
+              disabled={!enableFlash}
+            />
+          </div>
+
+          <div className="control-group">
+            <label>Flash Duration (ms):</label>
+            <input
+              type="range"
+              min="200"
+              max="3000"
+              step="100"
+              value={flashDuration}
+              onChange={(e) => setFlashDuration(parseInt(e.target.value))}
+              disabled={!enableFlash}
+            />
+            <span>{flashDuration}ms</span>
+          </div>
+
+          <button className="update-button" onClick={updateRandomValues}>
+            Update Random Values
+          </button>
+        </div>
+
+        <div className="demo-container">
+          <JsonTreeViewer
+            data={sampleJson}
+            initialExpandedDepth={2}
+            enableFlash={enableFlash}
+            flashColor={flashColor}
+            flashDuration={flashDuration}
+          />
+        </div>
+
+        <CodeBlock code={`import JsonTreeViewer from './JsonTreeViewer';
+
+// Your JSON data
 const data = {
   name: 'John Doe',
   age: 30,
   address: {
     street: '123 Main St',
     city: 'New York',
-    country: 'USA',
+    country: 'USA'
   },
-  contacts: [
-    { type: 'email', value: 'john@example.com' },
-    { type: 'phone', value: '+1-555-123-4567' },
-  ],
+  // ... more data
 };
 
-const MyComponent = () => {
-  return <JsonTreeViewer data={data} />;
-};`,
-    },
-    {
-      title: 'Deeply Nested JSON',
-      description: 'Handling deeply nested JSON structures with folder-like organization.',
-      preview: (
-        <JsonTreeViewer data={nestedJson} />
-      ),
-      code: `import { JsonTreeViewer } from './JsonTreeViewer';
-
-const nestedData = {
-  id: 1,
-  type: 'root',
-  children: [
-    {
-      id: 2,
-      type: 'folder',
-      name: 'Documents',
-      children: [
-        {
-          id: 3,
-          type: 'file',
-          name: 'report.pdf',
-          size: '2.5MB',
-        },
-      ],
-    },
-  ],
-};
-
-const MyComponent = () => {
-  return <JsonTreeViewer data={nestedData} />;
-};`,
-    },
-    {
-      title: 'Custom Theme',
-      description: 'JSON tree viewer with custom colors and styling.',
-      preview: (
-        <JsonTreeViewer
-          data={sampleJson}
-          theme={{
-            backgroundColor: 'var(--bg-color)',
-            textColor: 'var(--text-color)',
-            keyColor: 'var(--primary-color)',
-            stringColor: 'var(--success-text)',
-            numberColor: 'var(--warning-text)',
-            booleanColor: 'var(--error-text)',
-          }}
-        />
-      ),
-      code: `import { JsonTreeViewer } from './JsonTreeViewer';
-
+// Component with change highlighting
 const MyComponent = () => {
   return (
-    <JsonTreeViewer
-      data={data}
-      theme={{
-        backgroundColor: 'var(--bg-color)',
-        textColor: 'var(--text-color)',
-        keyColor: 'var(--primary-color)',
-        stringColor: 'var(--success-text)',
-        numberColor: 'var(--warning-text)',
-        booleanColor: 'var(--error-text)',
-      }}
+    <JsonTreeViewer 
+      data={data} 
+      initialExpandedDepth={2}
+      enableFlash={true}
+      flashColor="#ffff99"
+      flashDuration={1000}
     />
   );
-};`,
-    },
-    {
-      title: 'Initial Expanded Depth',
-      description: 'Control which levels are initially expanded in the tree.',
-      preview: (
-        <JsonTreeViewer
-          data={nestedJson}
-          defaultExpandedDepth={2}
-        />
-      ),
-      code: `import { JsonTreeViewer } from './JsonTreeViewer';
+};`} language="tsx" />
+      </section>
 
-const MyComponent = () => {
-  return (
-    <JsonTreeViewer
-      data={data}
-      defaultExpandedDepth={2}
-    />
-  );
-};`,
-    },
-  ];
-
-  return (
-    <div className="jsontreeviewer-demo">
-      <h2>JSON Tree Viewer Component</h2>
-
-      <div className="demo-info">
-        <h3>Overview</h3>
+      <section className="demo-section">
+        <h2>Nested Example</h2>
         <p>
-          The JSON Tree Viewer component provides an interactive way to visualize and
-          explore JSON data structures. It supports features like collapsible nodes,
-          custom themes, and controlled expansion levels.
+          This example shows a more deeply nested JSON structure.
         </p>
-      </div>
 
-      {variations.map((variation, index) => (
-        <div key={index} className="demo-variation">
-          <h3>{variation.title}</h3>
-          <p>{variation.description}</p>
-
-          <div className="demo-preview">
-            <h4>Preview</h4>
-            <div className="preview-container">
-              {variation.preview}
-            </div>
-          </div>
-
-          <div className="demo-code">
-            <h4>Code</h4>
-            <CodeBlock code={variation.code} language="tsx" />
-          </div>
+        <div className="demo-container">
+          <JsonTreeViewer data={nestedJson} initialExpandedDepth={1} />
         </div>
-      ))}
 
-      <div className="demo-info">
-        <h3>Required CSS</h3>
-        <CodeBlock
-          code={`/* Add these styles to your CSS file */
-.json-tree {
-  font-family: 'Fira Code', monospace;
-  font-size: 14px;
-  line-height: 1.5;
-  padding: 16px;
-  background-color: var(--bg-color);
-  border: 1px solid var(--border-color);
-  border-radius: 4px;
-}
+        <CodeBlock code={`<JsonTreeViewer 
+  data={nestedJson} 
+  initialExpandedDepth={1} 
+/>`} language="tsx" />
+      </section>
 
-.json-tree-node {
-  margin-left: 24px;
-}
+      <section className="demo-section">
+        <h2>API Reference</h2>
 
-.json-tree-key {
-  color: var(--primary-color);
-  margin-right: 8px;
-}
-
-.json-tree-value {
-  color: var(--text-color);
-}
-
-.json-tree-value.string {
-  color: var(--success-text);
-}
-
-.json-tree-value.number {
-  color: var(--warning-text);
-}
-
-.json-tree-value.boolean {
-  color: var(--error-text);
-}
-
-.json-tree-toggle {
-  cursor: pointer;
-  user-select: none;
-  margin-right: 4px;
-}
-
-.json-tree-toggle:hover {
-  opacity: 0.8;
-}`}
-          language="css"
-        />
-      </div>
+        <table className="api-table">
+          <thead>
+            <tr>
+              <th>Prop</th>
+              <th>Type</th>
+              <th>Default</th>
+              <th>Description</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>data</td>
+              <td>object | array</td>
+              <td>Required</td>
+              <td>The JSON data to display</td>
+            </tr>
+            <tr>
+              <td>initialExpandedDepth</td>
+              <td>number</td>
+              <td>1</td>
+              <td>How many levels to expand initially</td>
+            </tr>
+            <tr>
+              <td>name</td>
+              <td>string</td>
+              <td>null</td>
+              <td>Optional name for the root node</td>
+            </tr>
+            <tr>
+              <td>isRoot</td>
+              <td>boolean</td>
+              <td>true</td>
+              <td>Whether this is the root node</td>
+            </tr>
+            <tr>
+              <td>enableFlash</td>
+              <td>boolean</td>
+              <td>true</td>
+              <td>Whether to highlight values when they change</td>
+            </tr>
+            <tr>
+              <td>flashColor</td>
+              <td>string</td>
+              <td>'#ffff99'</td>
+              <td>Color for the flash highlight</td>
+            </tr>
+            <tr>
+              <td>flashDuration</td>
+              <td>number</td>
+              <td>1000</td>
+              <td>Duration of the flash animation in milliseconds</td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
     </div>
   );
 };
