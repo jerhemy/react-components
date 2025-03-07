@@ -1,6 +1,8 @@
 import './ComponentPage.css';
 
+import BarGraphDemo from '../../demo-pages/BarGraphDemo';
 import ButtonDemo from '../Button/ButtonDemo';
+import CardDemo from '../Card/CardDemo';
 import CheckboxDemo from '../../pages/CheckboxDemo';
 import CodeBlock from '../CodeBlock/CodeBlock';
 import DataGridDemo from '../DataGridDemo';
@@ -13,14 +15,13 @@ import JsonTreeViewerDemo from '../JsonTreeViewer/JsonTreeViewerDemo';
 import ModalDemo from '../ModalDemo';
 import RadioDemo from '../../pages/RadioDemo';
 import React from 'react';
+import RouteProgressDemo from '../../pages/RouteProgressDemo';
 import RouteTrackerDemo from '../RouteTracker/RouteTrackerDemo';
 import SchedulerDemo from '../SchedulerDemo';
 import SelectDemo from '../../demo-pages/SelectDemo';
 import TableDemo from '../Table/TableDemo';
 import { componentData } from '../../data/componentData';
 import { useParams } from 'react-router-dom';
-import RouteProgressDemo from '../../pages/RouteProgressDemo';
-import CardDemo from '../Card/CardDemo';
 
 // Import demo components
 
@@ -65,23 +66,24 @@ interface ComponentData {
 
 // Map component IDs to their demo components
 const demoComponents: Record<string, React.ComponentType> = {
+  barGraph: BarGraphDemo,
+  button: ButtonDemo,
   card: CardDemo,
-  jsonViewer: JsonTreeViewerDemo,
+  checkbox: CheckboxDemo,
   dataGrid: DataGridDemo,
-  routeTracker: RouteTrackerDemo,
-  routeProgress: RouteProgressDemo,
-  globalSearch: GlobalSearchDemo,
-  scheduler: SchedulerDemo,
-  select: SelectDemo,
   fieldset: FieldsetDemo,
-  modal: ModalDemo,
+  formGroup: FormGroupDemo,
+  globalSearch: GlobalSearchDemo,
   icon: IconDemo,
   input: InputDemo,
-  button: ButtonDemo,
-  table: TableDemo,
-  formGroup: FormGroupDemo,
+  jsonViewer: JsonTreeViewerDemo,
+  modal: ModalDemo,
   radio: RadioDemo,
-  checkbox: CheckboxDemo,
+  routeProgress: RouteProgressDemo,
+  routeTracker: RouteTrackerDemo,
+  scheduler: SchedulerDemo,
+  select: SelectDemo,
+  table: TableDemo,
 };
 
 const ComponentPage: React.FC = () => {

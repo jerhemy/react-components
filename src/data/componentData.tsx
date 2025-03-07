@@ -1,3 +1,4 @@
+import BarGraphDemo from '../components/BarGraphDemo';
 import DataGridDemo from '../components/DataGridDemo';
 import FieldsetDemo from '../components/FieldsetDemo';
 import FormGroupDemo from '../pages/FormGroupDemo';
@@ -5,8 +6,8 @@ import GlobalSearchDemo from '../components/GlobalSearchDemo';
 import JsonTreeViewerDemo from '../components/JsonTreeViewerDemo';
 import ModalDemo from '../components/ModalDemo';
 import React from 'react';
-import RouteTrackerDemo from '../components/RouteTrackerDemo';
 import RouteProgressDemo from '../pages/RouteProgressDemo';
+import RouteTrackerDemo from '../components/RouteTrackerDemo';
 import SchedulerDemo from '../components/SchedulerDemo';
 import SelectDemo from '../components/SelectDemo';
 
@@ -36,7 +37,8 @@ export const componentCategories = {
       { id: 'dataGrid', label: 'Data Grid' },
       { id: 'jsonViewer', label: 'JSON Viewer' },
       { id: 'table', label: 'Table' },
-      { id: 'gauge', label: 'Gauge' }
+      { id: 'gauge', label: 'Gauge' },
+      { id: 'barGraph', label: 'Bar Graph' }
     ]
   },
   layout: {
@@ -1250,7 +1252,116 @@ function MyComponent() {
       'Dark theme support'
     ]
   },
-}; 
+  barGraph: {
+    name: 'Bar Graph',
+    description: 'A responsive SVG bar graph component with animation capabilities.',
+    codeExample: `
+import BarGraph from './components/BarGraph';
+
+const MyComponent = () => {
+  const data = [
+    { label: 'Jan', value: 45 },
+    { label: 'Feb', value: 72 },
+    { label: 'Mar', value: 38 },
+    { label: 'Apr', value: 84 },
+    { label: 'May', value: 63 },
+    { label: 'Jun', value: 91 }
+  ];
+
+  return (
+    <BarGraph
+      data={data}
+      title="Monthly Sales"
+      animate={true}
+      height={300}
+    />
+  );
+};
+`,
+    api: [
+      { name: 'data', type: 'BarGraphDataPoint[]', required: true, description: 'Array of data points with label, value, and optional color' },
+      { name: 'width', type: 'string | number', default: '100%', description: 'Width of the graph container' },
+      { name: 'height', type: 'string | number', default: '400', description: 'Height of the graph container' },
+      { name: 'title', type: 'string', description: 'Title displayed above the graph' },
+      { name: 'animate', type: 'boolean', default: 'true', description: 'Whether to animate transitions when data changes' },
+      { name: 'animationDuration', type: 'number', default: '500', description: 'Duration of animations in milliseconds' },
+      { name: 'barColor', type: 'string', default: '#4f46e5', description: 'Default color for bars' },
+      { name: 'hoverColor', type: 'string', default: '#6366f1', description: 'Color for bars on hover' },
+      { name: 'showValues', type: 'boolean', default: 'true', description: 'Whether to show values on top of bars' },
+      { name: 'showXAxis', type: 'boolean', default: 'true', description: 'Whether to show the X-axis' },
+      { name: 'showYAxis', type: 'boolean', default: 'true', description: 'Whether to show the Y-axis' },
+      { name: 'showGrid', type: 'boolean', default: 'true', description: 'Whether to show grid lines' },
+      { name: 'yAxisTicks', type: 'number', default: '5', description: 'Number of ticks on the Y-axis' },
+      { name: 'barPadding', type: 'number', default: '0.2', description: 'Padding between bars (0-1)' },
+      { name: 'valueFormatter', type: '(value: number) => string', default: 'value => value.toString()', description: 'Function to format values displayed on bars and Y-axis' },
+      { name: 'labelFormatter', type: '(label: string) => string', default: 'label => label', description: 'Function to format labels on the X-axis' },
+      { name: 'onBarClick', type: '(dataPoint: BarGraphDataPoint, index: number) => void', description: 'Callback when a bar is clicked' }
+    ],
+    features: [
+      'Responsive SVG-based bar graph',
+      'Smooth animations when data changes',
+      'Customizable colors, labels, and values',
+      'Interactive hover and click effects',
+      'Configurable axes and grid lines',
+      'Value and label formatting options',
+      'Accessible and screen-reader friendly'
+    ],
+    usageExamples: [
+      {
+        title: 'Basic Usage',
+        description: 'A simple bar graph with default settings.',
+        code: `
+<BarGraph
+  data={[
+    { label: 'Jan', value: 45 },
+    { label: 'Feb', value: 72 },
+    { label: 'Mar', value: 38 },
+    { label: 'Apr', value: 84 },
+    { label: 'May', value: 63 },
+    { label: 'Jun', value: 91 }
+  ]}
+  title="Monthly Sales"
+  animate={true}
+  height={300}
+/>
+`
+      },
+      {
+        title: 'Customized Graph',
+        description: 'A more customized bar graph with custom colors, formatters, and interaction.',
+        code: `
+<BarGraph
+  data={monthlyData} // Array of { label, value, color? }
+  title="Annual Revenue by Month"
+  animate={true}
+  height={400}
+  barColor="#3b82f6"
+  hoverColor="#2563eb"
+  valueFormatter={(value) => \`$\${value.toLocaleString()}\`}
+  onBarClick={(dataPoint, index) => {
+    console.log(\`Bar clicked: \${dataPoint.label} - \${dataPoint.value}\`);
+  }}
+  yAxisTicks={8}
+  barPadding={0.3}
+/>
+`
+      },
+      {
+        title: 'Without Animation',
+        description: 'A bar graph with animations disabled.',
+        code: `
+<BarGraph
+  data={data}
+  title="Static Bar Graph"
+  animate={false}
+  showGrid={false}
+  barColor="#10b981"
+/>
+`
+      }
+    ]
+  },
+};
 
 export const componentList = [
   { id: 'button', label: 'Button' },
